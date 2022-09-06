@@ -34,8 +34,8 @@ if (!error){
 const mdLinks2 = (document) => {
 
     fs.readFile(document,'utf-8',(error,data)=>{
+    console.log(`LINKS STATE`.yellow)   
     if (!error){
-        console.log(`LINKS STATE`.yellow)
         let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
         mdToHtml('a').each(function(indice, elemento){
             axios.get(`${elemento.attributes[0].value}`)
