@@ -3,5 +3,9 @@
   "version": "0.1.0",
   "engines": {
     "node": ">=16.x"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "marked": "^4.1.0"
   }
 }
