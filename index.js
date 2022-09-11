@@ -1,5 +1,6 @@
 //instalar modulos
 const fs = require('fs'); // Se importa en una var fs mediante require el modulo file_system 
+const path = require('path');
 // En consola : npm install  marked 
 const marked = require('marked'); //HTML
 const cheerio = require('cheerio'); //ELEMENT
@@ -13,6 +14,44 @@ const principal =()=>{
     console.log(`                              mdLinks :)                       `)
     console.log(`***************************************************************`.yellow)
 }
+// PATH
+const docEjem = "/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/";
+const docEjem2= "readmeExample.md";
+// console.log(path.normalize(docEjem));
+// console.log(path.dirname(docEjem));
+// console.log(path.basename(docEjem));
+// console.log(path.extname(docEjem));
+
+// //PARA LEER ARCHIVOS DE UN DIRECTORIO
+function listPath(ruta) {
+    let docsList =[];
+    pathRead (ruta);
+    return docsList
+}
+
+
+function pathRead (ruta) {
+    let rutaAbsoluta = path.normalize(ruta);
+    fs.readdir(ruta,(error,docs)=>{
+        if(!error){
+            docs.forEach(doc => {
+                return (path.extname(doc)==='.md')?(docsList.push(path.join(rutaAbsoluta,doc))):'doc is not .md';
+            })
+            docs.forEach(doc => {
+             let newFolder = path.join(rutaAbsoluta,doc);
+             if(pathRead(newFolder)!=undefined){
+              return (path.basename(doc).includes('.md'))===false?(docsList.push(pathRead(newFolder))):'doc is not .md';
+             } 
+            })
+        }
+    })
+    //console.log(docsList);
+}
+console.log(listPath(docEjem))
+
+// console.log(docsList);
+
+
 // MD LINKS LISTA DE LINKS
 const mdLinks = (document) => {
 console.log(`LINKS FOUND`.yellow)
@@ -28,8 +67,10 @@ if (!error){
 }
 })
 }
+// mdLinks(docEjem); 
 // mdLinks('readmeExample.md');
 
+/*
 // MD LINKS STATUS CODE
 const mdLinks2 = (document) => {
 
@@ -62,9 +103,9 @@ const mdLinks2 = (document) => {
     }
 
 principal();
-mdLinks('readmeExample2.md');   
-mdLinks2('readmeExample2.md');
-
+mdLinks('readmeExample.md');   
+mdLinks2('readmeExample.md');
+*/
 
 module.exports = () => {
     mdLinks
