@@ -9,8 +9,6 @@ const axios = require('axios'); //BREAK
 const colors = require('colors');
 
 // PATH
-const docEjem ='HOLIS';
-const docEjem2= "readmeExample.md";
 
 // LA RUTA EXISTE           *************************************************************
 const existRoute =(route) => fs.existsSync(route)
@@ -70,7 +68,6 @@ const mdLinks2 = (document) => {
             axios.get(`${elemento.attributes[0].value}`)
             .then((response)=>{
                 return(docslistLinks2.push({
-                    'link': `${indice+1}/${mdToHtml('a').length}`,
                     'href': `${elemento.attributes[0].value}`,
                     'text': `${elemento.children[0].nodeValue}`,
                     'file': `${path.basename(document)}`,
@@ -81,7 +78,6 @@ const mdLinks2 = (document) => {
             })
             .catch((error)=>{
                 return(docslistLinks2.push({
-                    'link': `${indice+1}/${mdToHtml('a').length}`,
                     'href': `${elemento.attributes[0].value}`,
                     'text': `${elemento.children[0].nodeValue}`,
                     'file': `${path.basename(document)}`,
@@ -147,6 +143,11 @@ const mdLinks = (route,elements) => {
 
 
 module.exports = {
-    mdLinks
+    mdLinks,
+    existRoute,
+    pathGlobal,
+    pathRead,
+    mdLinks1,
+    mdLinks2
   };
   

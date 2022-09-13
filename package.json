@@ -8,6 +8,26 @@
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "colors": "^1.4.0",
+    "jest": "^29.0.3",
     "marked": "^4.1.0"
-  }
+  },
+  "description": "## Índice",
+  "main": "index.js",
+  "directories": {
+    "test": "jest"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brivanessa/LIM018-md-links.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brivanessa/LIM018-md-links/issues"
+  },
+  "homepage": "https://github.com/brivanessa/LIM018-md-links#readme"
 }
