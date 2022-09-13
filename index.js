@@ -18,13 +18,15 @@ const principal =()=>{
 const docEjem ='HOLIS';
 const docEjem2= "readmeExample.md";
 
-
+// LA RUTA EXISTE           *************************************************************
 const existRoute =(route) => fs.existsSync(route)
-//RUTA ABSOLUTA
+
+// RUTA ABSOLUTA Y NORMALIZADA **********************************************************
 function pathGlobal(routaInput){
-return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
+    return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
 }
-//PARA LEER ARCHIVOS DE UN DIRECTORIO
+
+// PARA LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *************************************
 let docslist=[];
 const pathRead = (ruta)=> { 
     let rutaAbsoluta =  pathGlobal(ruta);
@@ -40,29 +42,31 @@ const pathRead = (ruta)=> {
         }
     })
 }
-// pathRead(docEjem);
-// setTimeout(()=>{
-//     console.log(docslist);
-// },3000)
+    // pathRead(docEjem);
+    // setTimeout(()=>{ console.log(docslist)},3000)
 
-// MD LINKS LISTA DE LINKS
+// MD LINKS LISTA DE LINKS ************************************************************
+let docslistLinks=[];
 const mdLinks1 = (document) => {
-console.log(`LINKS FOUND`.yellow)
     fs.readFile(document,'utf-8',(error,data)=>{
         if (!error){
             let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
             mdToHtml('a').each(function(indice, elemento){
-                const numberLink =`${indice}`.yellow;
-                console.log(` LINK Nº ${numberLink}: ${elemento.children[0].nodeValue} ${elemento.attributes[0].value}`)
+               return(docslistLinks.push({
+                 'link': `${indice+1}/${mdToHtml('a').length}`,
+                 'href': `${elemento.attributes[0].value}`,
+                 'text': `${elemento.children[0].nodeValue}`,
+                 'file': `${path.basename(document)}`,
+                 'route': `${pathGlobal(document)}`,
+               }))
             })
         } 
     })
 } 
-//mdLinks(docEjem); 
-mdLinks1('readmeExample.md');
+// mdLinks1('readmeExample.md');
+// setTimeout(()=>{console.log(docslistLinks)},3000)
 
-
-// MD LINKS STATUS CODE
+// MD LINKS STATUS CODE     *************************************************************
 const mdLinks2 = (document) => {
 
     fs.readFile(document,'utf-8',(error,data)=>{
@@ -93,24 +97,20 @@ const mdLinks2 = (document) => {
     })
     }
 
-// principal();
-// mdLinks1('readmeExample.md');   
-// mdLinks2('readmeExample.md');
-
-//CREANDO PROMESAS
-const mdLinks = (route) => {
+// CREANDO PROMESAS => MDLINKS *************************************************************
+const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
-        if (existRoute(route)) {
+        if ( (!!elements==false) && existRoute(route)) {
             pathRead(route);
-            //mdLinks1(docslist);
-           setTimeout(()=>{
-                res(docslist);
-                //mdLinks1(docslist);
-                //res(docslistLinksURL);
-                //res(mdLinks1(docslist));
-           },1000)
+            setTimeout(()=>{
+                docslist.map((item)=>{return mdLinks1(item)})
+            },1000)
+            setTimeout(()=>{  
+                console.log(`mdLinks(${route})`.yellow)
+                res(docslistLinks);
+            },2000)
         } else {
-            rej('no hay archivos .md')
+            rej('La ruta no existe..')
         }
     })
 }
