@@ -62,3 +62,11 @@
 // // PARA INSTALAR LOS MODULOS
 // // (CTRL + L = clear)
 // // 
+
+// PATH
+// const docEjem ='HOLIS';
+// const docEjem2= "readmeExample.md";
+// console.log(path.normalize(docEjem));
+// console.log(path.dirname(docEjem));
+// console.log(path.basename(docEjem));
+// console.log(path.extname(docEjem));

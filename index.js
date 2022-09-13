@@ -15,63 +15,35 @@ const principal =()=>{
     console.log(`***************************************************************`.yellow)
 }
 // PATH
-const docEjem = "/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/HOLIS/";
+const docEjem ='HOLIS';
 const docEjem2= "readmeExample.md";
-// console.log(path.normalize(docEjem));
-// console.log(path.dirname(docEjem));
-// console.log(path.basename(docEjem));
-// console.log(path.extname(docEjem));
 
-// //PARA LEER ARCHIVOS DE UN DIRECTORIO
-// let docsList =[];
-// function pathRead (ruta) { 
-//     let rutaAbsoluta = path.normalize(ruta);
-//     fs.readdir(ruta,(error,docs)=>{
-//         if(!error){
-//             docs.forEach(doc => {
-//              ((path.extname(doc)==='.md')?(docsList.push(path.join(rutaAbsoluta,doc))):'doc is not .md');
-//              let newFolder = path.join(rutaAbsoluta,doc);
-//                 //    ((path.basename(doc).includes('.md'))===false?(docsList.push(pathRead(newFolder))):'doc is not .md');
-//              (pathRead(newFolder)!=undefined)&&((!!path.extname(doc))==false)?(docsList.push(pathRead(newFolder))):'doc is not .md';
-//             })           
-//         }
-//         return docsList
-//     })
-// }
-// pathRead(docEjem);
-// setTimeout(()=>{
-//     console.log(docsList);
-// },3000)
+//RUTA ABSOLUTA
+function pathGlobal(routaInput){
+return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
+}
 
-// //PARA LEER ARCHIVOS DE UN DIRECTORIO
-// const pathListGlobal =(ruta)=> {
-//     let docsList =[];
-//     return new Promise((resolve, reject)=>{
-
-//     })
-// }
-// let docsList =[];
-function pathRead (ruta) { 
-    let rutaAbsoluta = path.normalize(ruta);
+//PARA LEER ARCHIVOS DE UN DIRECTORIO
+let docslist=[];
+const pathRead = (ruta)=> { 
+    let rutaAbsoluta =  pathGlobal(ruta);
     fs.readdir(ruta,(error,docs)=>{
-        console.log(docs)
         if(!error){
-            let gg = docs.map(doc => {
-             return (path.extname(doc)==='.md')?((path.join(rutaAbsoluta,doc))):'doc is not .md';
-            }) 
-            let gg2 = docs.map(doc => {
-                let newFolder = path.join(rutaAbsoluta,doc);
-                return (pathRead(newFolder)!=undefined)&&((!!path.extname(doc))==false)?((pathRead(newFolder))):'doc is not .md';
-            })
-            return (gg.push(gg2))           
+            let docs3=docs.map(doc=>{return path.join(rutaAbsoluta,doc)});
+            docs3.filter(doc => {
+                if(path.extname(doc)==='.md'){
+                    return docslist.push(doc)
+                }});
+            let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
+            docs5.map(doc=>{ return (pathRead(doc))})
+      
         }
     })
-    // console.log(gg.push(gg2))  
-    // console.log(paths)
 }
 pathRead(docEjem);
-
-
+setTimeout(()=>{
+    console.log(docslist);
+},3000)
 
 // MD LINKS LISTA DE LINKS
 const mdLinks = (document) => {
