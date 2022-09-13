@@ -18,11 +18,12 @@ const principal =()=>{
 const docEjem ='HOLIS';
 const docEjem2= "readmeExample.md";
 
+
+const existRoute =(route) => fs.existsSync(route)
 //RUTA ABSOLUTA
 function pathGlobal(routaInput){
 return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
 }
-
 //PARA LEER ARCHIVOS DE UN DIRECTORIO
 let docslist=[];
 const pathRead = (ruta)=> { 
@@ -36,34 +37,31 @@ const pathRead = (ruta)=> {
                 }});
             let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
             docs5.map(doc=>{ return (pathRead(doc))})
-      
         }
     })
 }
-pathRead(docEjem);
-setTimeout(()=>{
-    console.log(docslist);
-},3000)
+// pathRead(docEjem);
+// setTimeout(()=>{
+//     console.log(docslist);
+// },3000)
 
 // MD LINKS LISTA DE LINKS
-const mdLinks = (document) => {
+const mdLinks1 = (document) => {
 console.log(`LINKS FOUND`.yellow)
-fs.readFile(document,'utf-8',(error,data)=>{
-if (!error){
-    let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
-    mdToHtml('a').each(function(indice, elemento){
-        const numberLink =`${indice}`.yellow;
-        console.log(` LINK Nº ${numberLink}: ${elemento.children[0].nodeValue} ${elemento.attributes[0].value}`)
+    fs.readFile(document,'utf-8',(error,data)=>{
+        if (!error){
+            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
+            mdToHtml('a').each(function(indice, elemento){
+                const numberLink =`${indice}`.yellow;
+                console.log(` LINK Nº ${numberLink}: ${elemento.children[0].nodeValue} ${elemento.attributes[0].value}`)
+            })
+        } 
     })
-} else {
-    console.log(`Error: ${error}`)
-}
-})
-}
-// mdLinks(docEjem); 
-// mdLinks('readmeExample.md');
+} 
+//mdLinks(docEjem); 
+mdLinks1('readmeExample.md');
 
-/*
+
 // MD LINKS STATUS CODE
 const mdLinks2 = (document) => {
 
@@ -95,12 +93,36 @@ const mdLinks2 = (document) => {
     })
     }
 
-principal();
-mdLinks('readmeExample.md');   
-mdLinks2('readmeExample.md');
-*/
+// principal();
+// mdLinks1('readmeExample.md');   
+// mdLinks2('readmeExample.md');
 
-module.exports = () => {
+//CREANDO PROMESAS
+const mdLinks = (route) => {
+    return new Promise((res,rej) => {
+        if (existRoute(route)) {
+            pathRead(route);
+            //mdLinks1(docslist);
+           setTimeout(()=>{
+                res(docslist);
+                //mdLinks1(docslist);
+                //res(docslistLinksURL);
+                //res(mdLinks1(docslist));
+           },1000)
+        } else {
+            rej('no hay archivos .md')
+        }
+    })
+}
+
+
+
+
+
+
+
+
+module.exports = {
     mdLinks
   };
   
