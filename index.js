@@ -61,35 +61,41 @@ const mdLinks1 = (document) => {
 // setTimeout(()=>{console.log(docslistLinks)},3000)
 
 // MD LINKS STATUS CODE     *************************************************************
+let docslistLinks2=[];
 const mdLinks2 = (document) => {
-
     fs.readFile(document,'utf-8',(error,data)=>{
-    console.log(`LINKS STATE`.yellow)   
     if (!error){
         let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
         mdToHtml('a').each(function(indice, elemento){
             axios.get(`${elemento.attributes[0].value}`)
             .then((response)=>{
-                const oks = `${response.statusText}`.green;
-                console.log(` ${indice} ${oks} (${response.status}): ${elemento.children[0].nodeValue} -> ${elemento.attributes[0].value}`)
+                return(docslistLinks2.push({
+                    'link': `${indice+1}/${mdToHtml('a').length}`,
+                    'href': `${elemento.attributes[0].value}`,
+                    'text': `${elemento.children[0].nodeValue}`,
+                    'file': `${path.basename(document)}`,
+                    'route': `${pathGlobal(document)}`,
+                    'status': `${response.status}`,
+                    'result':  `${response.statusText}`,
+                  }))
             })
             .catch((error)=>{
-                let errorName=`'${error}'`;
-                if (error==`AxiosError: Request failed with status code 404`){
-                const fail = `FAIL`.bgYellow;    
-                console.log(` ${indice} ${fail} (404): ${elemento.children[0].nodeValue} -> ${elemento.attributes[0].value}`) 
-                } else if (errorName.includes('ENOTFOUND')== true){
-                const fail = `FAIL`.bgYellow;     
-                console.log(` ${indice} ${fail} (not found page): ${elemento.children[0].nodeValue} -> ${elemento.attributes[0].value} `)
-                } else {console.log(`${indice}  ${elemento.children[0].nodeValue} ${elemento.attributes[0].value}
-                ${error}`)}    
+                return(docslistLinks2.push({
+                    'link': `${indice+1}/${mdToHtml('a').length}`,
+                    'href': `${elemento.attributes[0].value}`,
+                    'text': `${elemento.children[0].nodeValue}`,
+                    'file': `${path.basename(document)}`,
+                    'route': `${pathGlobal(document)}`,
+                    'status': `${error}`,
+                    'result':  `FAIL`,
+                })) 
             })
         })
-    } else {
-        console.log(`Error: ${error}`)
-    }
+    } 
     })
     }
+// mdLinks2('readmeExample.md');
+// setTimeout(()=>{console.log(docslistLinks2)},3000)
 
 // CREANDO PROMESAS => MDLINKS *************************************************************
 const mdLinks = (route,elements) => {
@@ -116,6 +122,17 @@ const mdLinks = (route,elements) => {
                 console.log(`*******************************************************************`.yellow)
                 res(docslistLinks);
             },2000)
+        } else if ( (elements.validate==true) && existRoute(route)) {
+            pathRead(route);
+            setTimeout(()=>{
+                docslist.map((item)=>{return mdLinks2(item)})
+            },1000)
+            setTimeout(()=>{  
+                console.log(`*******************************************************************`.yellow)
+                console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
+                console.log(`*******************************************************************`.yellow)
+                res(docslistLinks2);
+            },5000)
         } else {
             rej('La ruta no existe..')
         }
