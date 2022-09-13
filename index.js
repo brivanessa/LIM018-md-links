@@ -5,15 +5,9 @@ const path = require('path');
 const marked = require('marked'); //HTML
 const cheerio = require('cheerio'); //ELEMENT
 const axios = require('axios'); //BREAK
-//format
+//      format
 const colors = require('colors');
 
-
-const principal =()=>{
-    console.log(`***************************************************************`.yellow)
-    console.log(`                              mdLinks :)                       `)
-    console.log(`***************************************************************`.yellow)
-}
 // PATH
 const docEjem ='HOLIS';
 const docEjem2= "readmeExample.md";
@@ -106,7 +100,20 @@ const mdLinks = (route,elements) => {
                 docslist.map((item)=>{return mdLinks1(item)})
             },1000)
             setTimeout(()=>{  
-                console.log(`mdLinks(${route})`.yellow)
+                console.log(`***************************************************************`.yellow)
+                console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
+                console.log(`***************************************************************`.yellow)
+                res(docslistLinks);
+            },2000)
+        } else if ( (elements.validate==false) && existRoute(route)) {
+            pathRead(route);
+            setTimeout(()=>{
+                docslist.map((item)=>{return mdLinks1(item)})
+            },1000)
+            setTimeout(()=>{  
+                console.log(`*******************************************************************`.yellow)
+                console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:false}'.bgRed}) ----- mdLinks ` )
+                console.log(`*******************************************************************`.yellow)
                 res(docslistLinks);
             },2000)
         } else {
