@@ -25,17 +25,43 @@ const pathRead = (ruta)=> {
     fs.readdir(ruta,(error,docs)=>{
         if(!error){
             let docs3=docs.map(doc=>{return path.join(rutaAbsoluta,doc)});
+            console.log('maria')
             docs3.filter(doc => {
                 if(path.extname(doc)==='.md'){
-                    return docslist.push(doc)
+                    docslist.push(doc);
+                    return doc
                 }});
             let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
             docs5.map(doc=>{ return (pathRead(doc))})
         }
     })
 }
-    // pathRead(docEjem);
-    // setTimeout(()=>{ console.log(docslist)},3000)
+
+// function pathRead(ruta){ 
+//     let rutaAbsoluta =  pathGlobal(ruta);
+//     const routesMd = fs.readdir(ruta,(error,docs)=>{
+//         if(!error){
+//             let docs3=docs.map(doc=>{return path.join(rutaAbsoluta,doc)});
+//             console.log('maria')
+//             docs3.filter(doc => {
+//                 if(path.extname(doc)==='.md'){
+//                     docslist.push(doc);
+//                     return doc
+//                 }});
+//             let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
+//             docs5.map(doc=>{ return (pathRead(doc))})
+//         }
+//     })
+//     return routesMd
+// }
+const pathReadFile = (ruta)=> { 
+    if(path.extname(ruta)==='.md'){
+        docslist.push(pathGlobal(ruta))
+        return pathGlobal(ruta)
+    }
+};
+// pathReadFile('readmeExample.md');
+// setTimeout(()=>{ console.log(docslist)},3000)
 
 // MD LINKS LISTA DE LINKS ************************************************************
 let docslistLinks=[];
@@ -97,7 +123,7 @@ const mdLinks2 = (document) => {
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
         if ( (!!elements==false) && existRoute(route)) {
-            pathRead(route);
+            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
             setTimeout(()=>{
                 docslist.map((item)=>{return mdLinks1(item)})
             },1000)
@@ -108,7 +134,7 @@ const mdLinks = (route,elements) => {
                 res(docslistLinks);
             },2000)
         } else if ( (elements.validate==false) && existRoute(route)) {
-            pathRead(route);
+            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
             setTimeout(()=>{
                 docslist.map((item)=>{return mdLinks1(item)})
             },1000)
@@ -119,7 +145,7 @@ const mdLinks = (route,elements) => {
                 res(docslistLinks);
             },2000)
         } else if ( (elements.validate==true) && existRoute(route)) {
-            pathRead(route);
+            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
             setTimeout(()=>{
                 docslist.map((item)=>{return mdLinks2(item)})
             },1000)
@@ -146,6 +172,7 @@ module.exports = {
     mdLinks,
     existRoute,
     pathGlobal,
+    pathReadFile,
     pathRead,
     mdLinks1,
     mdLinks2
