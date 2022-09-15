@@ -1,6 +1,6 @@
 //instalar modulos
 const fs = require('fs'); // Se importa en una var fs mediante require el modulo file_system 
-const { promises } =require ('fs');
+// const { promises } =require ('fs');
 const path = require('path');
 // En consola : npm install  marked 
 const marked = require('marked'); //HTML
@@ -21,17 +21,20 @@ function pathGlobal(routaInput){
 
 // PARA LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *************************************
 let docslist=[];
+
 let error1 = 'no hay archivos en la carpeta'
-let error2 = 'la carpeta no existe'
+let error2 = 'la carpeta o ruta no existen'
 let error3 = 'no hay archivos .md en la carpeta'
 let error4 = 'no hay folders en la carpeta'
+
+//          PASO 1: LISTA DE ARCHIVOS DE UN DIRECTORIO *************************************
 function readFolder(ruta){
     let rutaAbsoluta =  pathGlobal(ruta);
     if (existRoute(rutaAbsoluta)==true){
         return (fs.readdirSync(ruta).length === 0)?(error1): fs.readdirSync(ruta).map(doc=>{return path.join(rutaAbsoluta,doc)});
     } else {return (error2)}
 }
-
+//          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO *************************************
 function pathReadMd(carpetaArray){ 
     let mdFiles = carpetaArray.filter(doc => {return(path.extname(doc)==='.md')});
         if (mdFiles.length === 0){ 
@@ -41,20 +44,21 @@ function pathReadMd(carpetaArray){
             return mdFiles
         }
 }
-
+//          PASO 3: LISTA DE CARPETAS DE UN DIRECTORIO *************************************
 function pathReadFolders(carpetaArray){ 
     let folders = carpetaArray.filter(doc => {return(!!path.extname(doc)==false)});
         if (folders.length === 0){ 
             return(error4);
         } else {return folders}
 }
-
+//          PASO 4: LISTA DE ARCHIVOS DE UN DIRECTORIO CON RECURSIVIDAD *************************************
+//docslist=[];
 const  pathRead = (ruta) => { 
     return new Promise((res,rej) => {
         if (readFolder(ruta)==error1){
-            res(`${error1}`);
+            rej(`${error1}`);
         } else if (readFolder(ruta)==error2){
-            res(`${error2}`);
+            rej(`${error2}`);
         // } else if (pathReadMd(readFolder(ruta))==error3){
         //     res(`${error3}`);
         }else if ((readFolder(ruta)!=error1)||(readFolder(ruta)!=error2)){
@@ -65,44 +69,22 @@ const  pathRead = (ruta) => {
                 folders.map(doc=>{ return (pathRead(doc))})
             }
             res(docslist);
-        } else {rej('Se presento algun error...')}
-        
+        } 
     })}
 
 //console.log(pathRead('carpeta'))
 //console.log(pathRead('folderFiles0'))
 //console.log(pathRead('folderFilesNoMd'))
 //console.log(pathRead('folderTestOneFileMd'))
-//const archivoMd = pathRead(archivos)
-//console.log(archivos)
-
-
-// function pathRead(ruta){ 
-//     let rutaAbsoluta =  pathGlobal(ruta);
-//     const routesMd = fs.readdir(ruta,(error,docs)=>{
-//         if(!error){
-//             let docs3=docs.map(doc=>{return path.join(rutaAbsoluta,doc)});
-//             console.log('maria')
-//             docs3.filter(doc => {
-//                 if(path.extname(doc)==='.md'){
-//                     docslist.push(doc);
-//                     return doc
-//                 }});
-//             let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
-//             docs5.map(doc=>{ return (pathRead(doc))})
-//         }
-//     })
-//     return routesMd
-// }
-// pathRead('readmeExample.md');
-// setTimeout(()=>{ console.log(docslist)},3000)
 
 const pathReadFile = (ruta)=> { 
-    if(path.extname(ruta)==='.md'){
-        docslist.push(pathGlobal(ruta))
-        return pathGlobal(ruta)
-    }
-};
+    return new Promise((res,rej) => {
+        if(path.extname(ruta)==='.md'){
+            docslist.push(pathGlobal(ruta))
+            res(pathGlobal(ruta))
+        } else {rej('no es un archivo .md...')}  
+    })}
+
 // pathReadFile('readmeExample.md');
 // setTimeout(()=>{ console.log(docslist)},3000)
 
@@ -165,22 +147,32 @@ const mdLinks2 = (document) => {
 // CREANDO PROMESAS => MDLINKS *************************************************************
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
-        if ( (!!elements==false) && existRoute(route)) {
-            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
-            setTimeout(()=>{
-                docslist.map((item)=>{return mdLinks1(item)})
-            },1000)
+        if (!!elements==false) {
+            if(path.extname(route)=='.md'){
+                pathReadFile(route)
+                .then(data =>{return mdLinks1(data)})
+                .catch(error => console.log(error))
+            }    
+            else{
+                pathRead(route)
+                .then(data => data.map((item)=>{return mdLinks1(item)}))
+                .catch(data=>console.log(data))
+            } 
             setTimeout(()=>{  
                 console.log(`***************************************************************`.yellow)
                 console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
                 console.log(`***************************************************************`.yellow)
                 res(docslistLinks);
             },2000)
-        } else if ( (elements.validate==false) && existRoute(route)) {
-            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
-            setTimeout(()=>{
-                docslist.map((item)=>{return mdLinks1(item)})
-            },1000)
+        } else if (elements.validate==false) {
+            if(path.extname(route)=='.md'){
+                pathReadFile(route)
+                .then(data =>{return mdLinks1(data)})
+            }    
+            else{
+                pathRead(route)
+                .then(data => data.map((item)=>{return mdLinks1(item)}))
+            } 
             setTimeout(()=>{  
                 console.log(`*******************************************************************`.yellow)
                 console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:false}'.bgRed}) ----- mdLinks ` )
@@ -188,10 +180,14 @@ const mdLinks = (route,elements) => {
                 res(docslistLinks);
             },2000)
         } else if ( (elements.validate==true) && existRoute(route)) {
-            (path.extname(route)=='.md')?pathReadFile(route):pathRead(route);
-            setTimeout(()=>{
-                docslist.map((item)=>{return mdLinks2(item)})
-            },1000)
+            if(path.extname(route)=='.md'){
+                pathReadFile(route)
+                .then(data =>{return mdLinks1(data)})
+            }    
+            else{
+                pathRead(route)
+                .then(data => data.map((item)=>{return mdLinks2(item)}))
+            } 
             setTimeout(()=>{  
                 console.log(`*******************************************************************`.yellow)
                 console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
@@ -216,7 +212,9 @@ module.exports = {
     existRoute,
     pathGlobal,
     pathReadFile,
+    pathReadFolders,
     pathRead,
+    pathReadMd,
     mdLinks1,
     mdLinks2
   };
