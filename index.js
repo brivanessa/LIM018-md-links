@@ -21,7 +21,6 @@ function pathGlobal(routaInput){
 
 // PARA LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *************************************
 let docslist=[];
-
 let error1 = 'no hay archivos en la carpeta'
 let error2 = 'la carpeta o ruta no existen'
 let error3 = 'no hay archivos .md en la carpeta'
@@ -52,7 +51,6 @@ function pathReadFolders(carpetaArray){
         } else {return folders}
 }
 //          PASO 4: LISTA DE ARCHIVOS DE UN DIRECTORIO CON RECURSIVIDAD *************************************
-//docslist=[];
 const  pathRead = (ruta) => { 
     return new Promise((res,rej) => {
         if (readFolder(ruta)==error1){
@@ -85,29 +83,32 @@ const pathReadFile = (ruta)=> {
         } else {rej('no es un archivo .md...')}  
     })}
 
-// pathReadFile('readmeExample.md');
-// setTimeout(()=>{ console.log(docslist)},3000)
+//console.log(pathReadFile('readmeExample.md'))
 
 // MD LINKS LISTA DE LINKS ************************************************************
 let docslistLinks=[];
-const mdLinks1 = (document) => {
-    fs.readFile(document,'utf-8',(error,data)=>{
-        if (!error){
+const readmdLinks=(document) => {
+    return new Promise ((res,rej)=>{
+        if (fs.readFileSync(document,'utf-8')===''){
+            rej('el archivo esta vacio')
+        } else {
+            let data = fs.readFileSync(document,'utf-8')
             let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
             mdToHtml('a').each(function(indice, elemento){
-               return(docslistLinks.push({
-                 'link': `${indice+1}/${mdToHtml('a').length}`,
-                 'href': `${elemento.attributes[0].value}`,
-                 'text': `${elemento.children[0].nodeValue}`,
-                 'file': `${path.basename(document)}`,
-                 'route': `${pathGlobal(document)}`,
-               }))
-            })
-        } 
+                docslistLinks.push({
+                  'link': `${indice+1}/${mdToHtml('a').length}`,
+                  'href': `${elemento.attributes[0].value}`,
+                  'text': `${elemento.children[0].nodeValue}`,
+                  'file': `${path.basename(document)}`,
+                  'route': `${pathGlobal(document)}`,
+                })
+                res(docslistLinks)
+             })
+        }
     })
-} 
-// mdLinks1('readmeExample.md');
-// setTimeout(()=>{console.log(docslistLinks)},3000)
+
+}
+//console.log(readmdLinks('readmeVacio.md'));
 
 // MD LINKS STATUS CODE     *************************************************************
 let docslistLinks2=[];
@@ -148,22 +149,21 @@ const mdLinks2 = (document) => {
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
         if (!!elements==false) {
+         console.log(`***************************************************************`.yellow)
+         console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
+         console.log(`***************************************************************`.yellow)
             if(path.extname(route)=='.md'){
                 pathReadFile(route)
-                .then(data =>{return mdLinks1(data)})
+                .then(data =>{return readmdLinks(data)})
                 .catch(error => console.log(error))
+                res(docslistLinks)
             }    
             else{
                 pathRead(route)
-                .then(data => data.map((item)=>{return mdLinks1(item)}))
+                .then(data => data.map((item)=>{return readmdLinks(item)}))
                 .catch(data=>console.log(data))
+                res(docslistLinks)
             } 
-            setTimeout(()=>{  
-                console.log(`***************************************************************`.yellow)
-                console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
-                console.log(`***************************************************************`.yellow)
-                res(docslistLinks);
-            },2000)
         } else if (elements.validate==false) {
             if(path.extname(route)=='.md'){
                 pathReadFile(route)
@@ -215,7 +215,7 @@ module.exports = {
     pathReadFolders,
     pathRead,
     pathReadMd,
-    mdLinks1,
+    //mdLinks1,
     mdLinks2
   };
   
