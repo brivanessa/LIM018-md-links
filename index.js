@@ -8,6 +8,7 @@ const cheerio = require('cheerio'); //ELEMENT
 const axios = require('axios'); //BREAK
 //      format
 const colors = require('colors');
+const { doesNotMatch } = require('assert');
 
 // PATH
 
@@ -86,7 +87,7 @@ const pathReadFile = (ruta)=> {
 //console.log(pathReadFile('readmeExample.md'))
 
 // MD LINKS LISTA DE LINKS ************************************************************
-let docslistLinks=[];
+let doclistLinks=[];
 const readmdLinks=(document) => {
     return new Promise ((res,rej)=>{
         if (fs.readFileSync(document,'utf-8')===''){
@@ -95,41 +96,44 @@ const readmdLinks=(document) => {
             let data = fs.readFileSync(document,'utf-8')
             let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
             mdToHtml('a').each(function(indice, elemento){
-                docslistLinks.push({
+                doclistLinks.push({
                   'link': `${indice+1}/${mdToHtml('a').length}`,
                   'href': `${elemento.attributes[0].value}`,
                   'text': `${elemento.children[0].nodeValue}`,
                   'file': `${path.basename(document)}`,
                   'route': `${pathGlobal(document)}`,
                 })
-                res(docslistLinks)
+                res(doclistLinks)
              })
         }
     })
-
 }
-//console.log(readmdLinks('readmeVacio.md'));
+//console.log(readmdLinks('readmeExample.md'));
 
 // MD LINKS STATUS CODE     *************************************************************
-let docslistLinks2=[];
-const mdLinks2 = (document) => {
-    fs.readFile(document,'utf-8',(error,data)=>{
-    if (!error){
-        let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
-        mdToHtml('a').each(function(indice, elemento){
-            axios.get(`${elemento.attributes[0].value}`)
-            .then((response)=>{
-                return(docslistLinks2.push({
+let docsLinkStatus=[];
+
+const readmdLinkStatus= (document) => {
+    return new Promise ((res,rej)=>{
+        if (fs.readFileSync(document,'utf-8')===''){
+            rej('el archivo esta vacio')
+        } else {
+            let data = fs.readFileSync(document,'utf-8')
+            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
+         mdToHtml('a').each(  function(indice,elemento){
+         axios.get(`${elemento.attributes[0].value}`)
+            .then( (response)=>{
+                (docsLinkStatus.push({
                     'href': `${elemento.attributes[0].value}`,
                     'text': `${elemento.children[0].nodeValue}`,
                     'file': `${path.basename(document)}`,
                     'route': `${pathGlobal(document)}`,
-                    'status': `${response.status}`,
+                    'status': `${ response.status}`,
                     'result':  `${response.statusText}`,
                   }))
             })
             .catch((error)=>{
-                return(docslistLinks2.push({
+                return(docsLinkStatus.push({
                     'href': `${elemento.attributes[0].value}`,
                     'text': `${elemento.children[0].nodeValue}`,
                     'file': `${path.basename(document)}`,
@@ -138,12 +142,16 @@ const mdLinks2 = (document) => {
                     'result':  `FAIL`,
                 })) 
             })
-        })
-    } 
+            res( docsLinkStatus)
+             })
+        }
     })
-    }
-// mdLinks2('readmeExample.md');
-// setTimeout(()=>{console.log(docslistLinks2)},3000)
+}
+//console.log(readmdLinkStatus('readmeExample.md'));
+
+// readmdLinkStatus('readmeExample.md');
+// // //console.log(readmdLinkStatus('readmeExample.md'))
+// setTimeout(()=>{console.log(docsLinkStatus)},3000)
 
 // CREANDO PROMESAS => MDLINKS *************************************************************
 const mdLinks = (route,elements) => {
@@ -156,44 +164,50 @@ const mdLinks = (route,elements) => {
                 pathReadFile(route)
                 .then(data =>{return readmdLinks(data)})
                 .catch(error => console.log(error))
-                res(docslistLinks)
+                res(doclistLinks)
             }    
             else{
                 pathRead(route)
                 .then(data => data.map((item)=>{return readmdLinks(item)}))
                 .catch(data=>console.log(data))
-                res(docslistLinks)
+                res(doclistLinks)
             } 
         } else if (elements.validate==false) {
+            console.log(`*******************************************************************`.yellow)
+            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:false}'.bgRed}) ----- mdLinks ` )
+            console.log(`*******************************************************************`.yellow)
             if(path.extname(route)=='.md'){
                 pathReadFile(route)
-                .then(data =>{return mdLinks1(data)})
+                .then(data =>{return readmdLinks(data)})
+                .catch(error => console.log(error))
+                res(doclistLinks)
             }    
             else{
                 pathRead(route)
-                .then(data => data.map((item)=>{return mdLinks1(item)}))
+                .then(data => data.map((item)=>{return readmdLinks(item)}))
+                .catch(data=>console.log(data))
+                res(doclistLinks)
             } 
-            setTimeout(()=>{  
-                console.log(`*******************************************************************`.yellow)
-                console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:false}'.bgRed}) ----- mdLinks ` )
-                console.log(`*******************************************************************`.yellow)
-                res(docslistLinks);
-            },2000)
         } else if ( (elements.validate==true) && existRoute(route)) {
+
             if(path.extname(route)=='.md'){
                 pathReadFile(route)
-                .then(data =>{return mdLinks1(data)})
+                .then(data =>{return readmdLinkStatus(data)})
+                .catch(error => console.log(error))
             }    
             else{
                 pathRead(route)
-                .then(data => data.map((item)=>{return mdLinks2(item)}))
+                .then(data => data.map((item)=>{return readmdLinkStatus(item)}))
+                .catch(data=>console.log(data))
             } 
+            //res(docsLinkStatus)
+ 
             setTimeout(()=>{  
                 console.log(`*******************************************************************`.yellow)
                 console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
                 console.log(`*******************************************************************`.yellow)
-                res(docslistLinks2);
-            },5000)
+                 res(docsLinkStatus);
+            },20000)
         } else {
             rej('La ruta no existe..')
         }
@@ -216,6 +230,6 @@ module.exports = {
     pathRead,
     pathReadMd,
     readmdLinks,
-    mdLinks2
+    readmdLinkStatus,
   };
   

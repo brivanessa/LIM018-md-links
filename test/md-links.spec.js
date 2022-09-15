@@ -17,10 +17,10 @@ const {
   pathReadFolders,
   pathRead,
   readmdLinks,
-  mdLinks2,
+  readmdLinkStatus,
 
 } = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
-
+jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteTestExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderTestOneFileMd/fileTestExample.md';
@@ -118,6 +118,23 @@ describe('readmdLinks', () => {
   });
 });
 
+describe('readmdLinkStatus', () => {
+  test('readmdLinkStatus', async() => {
+    return readmdLinkStatus('readmeVacio.md').catch(error=>{
+      expect(error).toBe('el archivo esta vacio');
+    });
+  });
+
+  test('readmdLinkStatus', async(done) => {
+    return readmdLinkStatus('readmeExample.md').then(data=>{
+      setTimeout(()=>{
+        expect(data).toHaveLength(5)
+        done()
+      },20000)
+      //expect(data).toHaveLength(5);
+    });
+  });
+});
 
 
 
