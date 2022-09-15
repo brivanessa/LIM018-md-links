@@ -215,7 +215,7 @@ module.exports = {
     pathReadFolders,
     pathRead,
     pathReadMd,
-    //mdLinks1,
+    readmdLinks,
     mdLinks2
   };
   

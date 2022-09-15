@@ -16,7 +16,7 @@ const {
   pathReadMd,
   pathReadFolders,
   pathRead,
-  mdLinks1,
+  readmdLinks,
   mdLinks2,
 
 } = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
@@ -103,6 +103,28 @@ describe(' pathReadFile', () => {
     });
   });
 });
+
+describe('readmdLinks', () => {
+  test('readmdLinks', async() => {
+    return readmdLinks('readmeVacio.md').catch(error=>{
+      expect(error).toBe('el archivo esta vacio');
+    });
+  });
+
+  test('readmdLinks', async() => {
+    return readmdLinks('readmeExample.md').then(data=>{
+      expect(data).toHaveLength(5);
+    });
+  });
+});
+
+
+
+
+
+
+
+
 
 // describe('pathRead',() => {
 //   it('Route "pathRead" should return the route of file', async() => {
