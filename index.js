@@ -1,5 +1,6 @@
 //instalar modulos
 const fs = require('fs'); // Se importa en una var fs mediante require el modulo file_system 
+const { promises } =require ('fs');
 const path = require('path');
 // En consola : npm install  marked 
 const marked = require('marked'); //HTML
@@ -20,22 +21,61 @@ function pathGlobal(routaInput){
 
 // PARA LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *************************************
 let docslist=[];
-const pathRead = (ruta)=> { 
+let error1 = 'no hay archivos en la carpeta'
+let error2 = 'la carpeta no existe'
+let error3 = 'no hay archivos .md en la carpeta'
+let error4 = 'no hay folders en la carpeta'
+function readFolder(ruta){
     let rutaAbsoluta =  pathGlobal(ruta);
-    fs.readdir(ruta,(error,docs)=>{
-        if(!error){
-            let docs3=docs.map(doc=>{return path.join(rutaAbsoluta,doc)});
-            console.log('maria')
-            docs3.filter(doc => {
-                if(path.extname(doc)==='.md'){
-                    docslist.push(doc);
-                    return doc
-                }});
-            let docs5=docs3.filter(doc => {return !!path.extname(doc)==false});
-            docs5.map(doc=>{ return (pathRead(doc))})
-        }
-    })
+    if (existRoute(rutaAbsoluta)==true){
+        return (fs.readdirSync(ruta).length === 0)?(error1): fs.readdirSync(ruta).map(doc=>{return path.join(rutaAbsoluta,doc)});
+    } else {return (error2)}
 }
+
+function pathReadMd(carpetaArray){ 
+    let mdFiles = carpetaArray.filter(doc => {return(path.extname(doc)==='.md')});
+        if (mdFiles.length === 0){ 
+            return(error3)
+        } else {
+            mdFiles.map(doc=>{return docslist.push(doc)})
+            return mdFiles
+        }
+}
+
+function pathReadFolders(carpetaArray){ 
+    let folders = carpetaArray.filter(doc => {return(!!path.extname(doc)==false)});
+        if (folders.length === 0){ 
+            return(error4);
+        } else {return folders}
+}
+
+const  pathRead = (ruta) => { 
+    return new Promise((res,rej) => {
+        if (readFolder(ruta)==error1){
+            res(`${error1}`);
+        } else if (readFolder(ruta)==error2){
+            res(`${error2}`);
+        // } else if (pathReadMd(readFolder(ruta))==error3){
+        //     res(`${error3}`);
+        }else if ((readFolder(ruta)!=error1)||(readFolder(ruta)!=error2)){
+            let archivos = readFolder(ruta);
+                pathReadMd(archivos);
+            let folders = pathReadFolders(archivos);
+            if  (folders!=error4){
+                folders.map(doc=>{ return (pathRead(doc))})
+            }
+            res(docslist);
+        } else {rej('Se presento algun error...')}
+        
+    })}
+
+//console.log(pathRead('carpeta'))
+//console.log(pathRead('folderFiles0'))
+//console.log(pathRead('folderFilesNoMd'))
+//console.log(pathRead('folderTestOneFileMd'))
+//const archivoMd = pathRead(archivos)
+//console.log(archivos)
+
 
 // function pathRead(ruta){ 
 //     let rutaAbsoluta =  pathGlobal(ruta);
@@ -54,6 +94,9 @@ const pathRead = (ruta)=> {
 //     })
 //     return routesMd
 // }
+// pathRead('readmeExample.md');
+// setTimeout(()=>{ console.log(docslist)},3000)
+
 const pathReadFile = (ruta)=> { 
     if(path.extname(ruta)==='.md'){
         docslist.push(pathGlobal(ruta))
