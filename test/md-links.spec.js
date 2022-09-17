@@ -19,7 +19,7 @@ const {
   pathRead,
   readmdLinks,
   readmdLinkStatus,
-  statslinksGlobal,
+  functionGlobalStats,
 } = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
 jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
@@ -159,20 +159,16 @@ describe('readmdLinkStatus', () => {
 });
 
 
-describe('statslinksGlobal', () => {
-  test('statslinksGlobal', async() => {
-    return statslinksGlobal('readmeVacio.md').catch(error=>{
+describe('functionGlobalStats', () => {
+  test('functionGlobalStats', async() => {
+    return functionGlobalStats('readmeVacio.md').catch(error=>{
       expect(error).toBe('el archivo esta vacio');
     });
   });
 
-  test('statslinksGlobal', async(done) => {
-    return statslinksGlobal('readmeExample.md').then(data=>{
-      setTimeout(()=>{
-        expect(data).toHaveLength(2)
-        done()
-      },5000)
-      //expect(data).toHaveLength(5);
+  test('functionGlobalStats', async(done) => {
+    return functionGlobalStats('readmeExample.md').then(data=>{
+        expect(data).toEqual(2)
     });
   });
 });

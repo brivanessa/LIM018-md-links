@@ -1,6 +1,9 @@
 //instalar modulos
 const fs = require('fs'); // Se importa en una var fs mediante require el modulo file_system 
-// const { promises } =require ('fs');
+//const { promises } =require ('fs');
+//import { readFile } from 'node:fs/promises'
+//const readFile = require('fs/promises');
+
 const path = require('path');
 // En consola : npm install  marked 
 const marked = require('marked'); //HTML
@@ -8,7 +11,7 @@ const cheerio = require('cheerio'); //ELEMENT
 const axios = require('axios'); //BREAK
 //      format
 const colors = require('colors');
-const { doesNotMatch } = require('assert');
+// const { doesNotMatch } = require('assert');
 
 // PATH
 
@@ -110,10 +113,10 @@ const readmdLinks=(document) => {
 }
 //console.log(readmdLinks('readmeExample.md'));
 
-// MD LINKS STATUS CODE     *************************************************************
-//          Links *************************+
+// LINKS *************************+
 let docsLinkStatus=[];
 let linksGlobal=[];
+/*
 const readmdLinksGlobal= (document) => {
     return new Promise ((res,rej)=>{
         if (fs.readFileSync(document,'utf-8')===''){
@@ -128,65 +131,74 @@ const readmdLinksGlobal= (document) => {
         }
     })
 }
+console.log(readmdLinksGlobal('readmeExample.md'));
+*/
+// CON PROMESAS
+const readmdLinksGlobal= (document) => {
+    
+            fs.promises.readFile(document,'utf-8')
+            .then(data => {
+             let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
+                mdToHtml('a').each( function(indice,elemento){
+                    linksGlobal.push(elemento.attributes[0].value) 
+                })
+                console.log(linksGlobal)
+                return((linksGlobal))
+            })    
+            .catch(error=>{
+                console.log(`${error.code}: No se encontro el archivo`)
+                return(`${error.code}: No se encontro el archivo`)})
+            
+       // }
+}
+readmdLinksGlobal('readmeExample.md')
+//readmdLinksGlobal('')
+
 //console.log(readmdLinksGlobal('readmeExample.md'));
+//console.log(readmdLinksGlobal('readmeVacio.md'));
+
+
+
+
 
 
 // MD LINKS STATS     *************************************************************
 //           *************************+
-let statLinks=[];
-// function statsOption (arrayLinks){
-//     statLinks.push(
-//         { 'Total': `${arrayLinks.length}`,
-//         'Unique': `${[...new Set(arrayLinks)].length}`})
-//     return statLinks   
-//     }
-//     console.log(statsOption([
-//       'https://es.wikipedia.org/wiki/Markdown',
-//       'https://es.wikipedia.org/wiki/Markdown',
-//       'http://nodejs.og/',
-//       'https://www.lego.com/en-us/notfound',
-//       'https://blueg.co.uk/404'
-//     ]));
-
+let statLinks;
+/*
 const statslinksGlobal= async(document) => {
     let arrayLinks = await (readmdLinksGlobal(document))
     //console.log(arrayLinks)
-    statLinks.push(
+    return statLinks =
         { 'Total': `${arrayLinks.length}`,
-        'Unique': `${[...new Set(arrayLinks)].length}`})
-    return statLinks   
+        'Unique': `${[...new Set(arrayLinks)].length}`}
+    //return statLinks   
 }
-const functionGlobal = async()=>{
-console.log('hola', await statslinksGlobal('readmeExample.md'));
-}
-//await statslinksGlobal('readmeExample.md')
-console.log(functionGlobal());
-//setTimeout(()=>{console.log(statLinks)},3000)
-
-/*
-// const  statsOption = (arrayLinks)=>{
-//     return new Promise((res,rej)=>{
-//         if(arrayLinks.length >0) {
-//             statLinks.push(
-//                 { 'Total': `${arrayLinks.length}`,
-//                 'Unique': `${[...new Set(arrayLinks)].length}`})
-//             res(statLinks)
-//         } else{
-//             rej('no hay links para analizar')
-//         }
-//     })
-  
-//     }
-//     console.log(statsOption([
-//       'https://es.wikipedia.org/wiki/Markdown',
-//       'https://es.wikipedia.org/wiki/Markdown',
-//       'http://nodejs.og/',
-//       'https://www.lego.com/en-us/notfound',
-//       'https://blueg.co.uk/404'
-//     ]));
-
-//console.log(statsOptionGlobal('readmeExample.md'));
+// const functionGlobalStats = async(document)=>{
+// console.log(await statslinksGlobal(document));
+// }
+// functionGlobalStats('readmeExample.md')
 */
+//
+const statslinksGlobal= (arrayLinks) => {
+    return statLinks =
+        { 'Total': `${arrayLinks.length}`,
+        'Unique': `${[...new Set(arrayLinks)].length}`}
+}
+
+const functionGlobalStats =(document)=>{
+            readmdLinksGlobal(document)
+            .then((data)=> {
+                //console.log(statslinksGlobal(data))
+                //return (statslinksGlobal(data))
+                //console.log(data)
+                return(data)
+            })
+    }
+//functionGlobalStats('readmeExample.md')
+//console.log(functionGlobalStats('readmeExample.md'))
+
+// MD LINKS STATUS CODE     *************************************************************
 //          Status *************************+
 const readmdLinkStatus= async(document) => {
     let linksArray = await (readmdLinksGlobal(document))
@@ -221,45 +233,6 @@ const readmdLinkStatus= async(document) => {
 //console.log(readmdLinkStatus('readmeExample.md'))
 //setTimeout(()=>{console.log(docsLinkStatus)},1000)
 
-
-
-/*
-const readmdLinkStatus= (document) => {
-  return new Promise ((res,rej)=>{
-    (readmdLinksGlobal(document))
-    .then(data =>{return readmdLinks(data)})
-    .catch(error => console.log(error))
-    docsLinkStatusLink.map((link)=> {
-            axios.get(`${link}`)
-            .then( (response)=>{
-                return (docsLinkStatus.push({
-                    'href': `${link}`,
-                // 'text': `${elemento.children[0].nodeValue}`,
-                    //'file': `${path.basename(document)}`,
-                    'route': `${pathGlobal(document)}`,
-                    'status': `${ response.status}`,
-                    'result':  `${response.statusText}`,
-                }))
-            })
-            .catch((error)=>{
-                return (docsLinkStatus.push({
-                    'href': `${link}`,
-                // 'text': `${elemento.children[0].nodeValue}`,
-                   // 'file': `${path.basename(document)}`,
-                    'route': `${pathGlobal(document)}`,
-                    'status': `${error}`,
-                    'result':  `FAIL`,
-                })) 
-            })
-            return (docsLinkStatus) 
-        })
-        res(docsLinkStatus) 
-    })
-}
-readmdLinkStatus('readmeExample.md');
-///console.log(readmdLinkStatus('readmeExample.md'))
-setTimeout(()=>{console.log(docsLinkStatus)},3000)
-*/
 // CREANDO PROMESAS => MDLINKS *************************************************************
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
@@ -343,12 +316,6 @@ const mdLinks = (route,elements) => {
 }
 
 
-
-
-
-
-
-
 module.exports = {
     mdLinks,
     existRoute,
@@ -361,5 +328,6 @@ module.exports = {
     readmdLinks,
     readmdLinkStatus,
     statslinksGlobal,
+    //functionGlobalStats,
   };
   
