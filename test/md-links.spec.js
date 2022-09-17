@@ -13,12 +13,13 @@ const {
   existRoute,
   pathGlobal,
   pathReadFile,
+  readmdLinksGlobal,
   pathReadMd,
   pathReadFolders,
   pathRead,
   readmdLinks,
   readmdLinkStatus,
-
+  statslinksGlobal,
 } = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
 jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
@@ -33,6 +34,13 @@ const readmeExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/
 const folderArray = [carpeta1, carpeta2, readmeExample]
 const folderArray2 = [carpeta1, carpeta2]
 const folderArray3 = [readmeExample]
+const readmeExampleLinks = [
+  'https://es.wikipedia.org/wiki/Markdown',
+  'https://es.wikipedia.org/wiki/Markdown',
+  'http://nodejs.og/',
+  'https://www.lego.com/en-us/notfound',
+  'https://blueg.co.uk/404'
+]
 
 describe('existRoute', () => {
   it('Route "readmeExample.md" should return true', () => {
@@ -118,6 +126,20 @@ describe('readmdLinks', () => {
   });
 });
 
+describe('readmdLinksGlobal', () => {
+  test('readmdLinksGlobal', async() => {
+    return readmdLinksGlobal('readmeVacio.md').catch(error=>{
+      expect(error).toBe('el archivo esta vacio');
+    });
+  });
+
+  test('readmdLinksGlobal', async() => {
+    return readmdLinksGlobal('readmeExample.md').then(data=>{
+      expect(data).toEqual(readmeExampleLinks);
+    });
+  });
+});
+
 describe('readmdLinkStatus', () => {
   test('readmdLinkStatus', async() => {
     return readmdLinkStatus('readmeVacio.md').catch(error=>{
@@ -130,46 +152,27 @@ describe('readmdLinkStatus', () => {
       setTimeout(()=>{
         expect(data).toHaveLength(5)
         done()
-      },20000)
+      },1000)
       //expect(data).toHaveLength(5);
     });
   });
 });
 
 
+describe('statslinksGlobal', () => {
+  test('statslinksGlobal', async() => {
+    return statslinksGlobal('readmeVacio.md').catch(error=>{
+      expect(error).toBe('el archivo esta vacio');
+    });
+  });
 
-
-
-
-
-
-// describe('pathRead',() => {
-//   it('Route "pathRead" should return the route of file', async() => {
-//       const route = await pathRead(folderTestOneFileMd);
-//       (expect(route).toEqual(fileRouteTestExample));
-//     })
-// });
-// test('the data is peanut butter', async () => {
-//   function pathRead(error,  folderTestOneFileMd) {
-//     if (error) {
-//       throw error;
-//     }
-//     await expect( folderTestOneFileMd).toBe(fileRouteTestExample);
-//   }
-
-//   pathRead(pathRead);
-// });
-
-// describe(' pathReadFile', () => {
-//   it('Route " pathReadFile" should return true',async () => {
-//     let docslist=[];
-//     const datos = await pathReadFile('readmeExample.md')
-//     expect(docslist.length).toBe(1);
-//   });
-// });
-
-// describe('pathRead', () => {
-//   it('Route "pathRead" should return true',() => {
-//     expect(pathRead('carpeta')).toBe(1);
-//   });
-// });
+  test('statslinksGlobal', async(done) => {
+    return statslinksGlobal('readmeExample.md').then(data=>{
+      setTimeout(()=>{
+        expect(data).toHaveLength(2)
+        done()
+      },5000)
+      //expect(data).toHaveLength(5);
+    });
+  });
+});
