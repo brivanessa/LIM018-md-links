@@ -18,8 +18,9 @@ const {
   pathReadFolders,
   pathRead,
   readmdLinks,
+  readDocuments,
   readmdLinkStatus,
-  functionGlobalStats,
+  statsArrayGlobal,
 } = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
 jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
@@ -125,7 +126,7 @@ describe('readmdLinks', () => {
     });
   });
 });
-
+//*******
 
 describe('converMdToHtml', () => {
   test('converMdToHtml', async() => {
@@ -141,6 +142,28 @@ describe('converMdToHtml', () => {
   });
 });
 
+describe('readDocuments', () => {
+  test('readDocuments', async() => {
+    return readDocuments('readmeVaci.md').catch(error=>{
+      expect(error).toBe('ENOENT: el archivo no existe');
+    });
+  });
+
+  test('readDocuments', async() => {
+    return readDocuments('readmeExample.md').then(data=>{
+      expect(data).toContain('es un lenguaje de marcado');
+    });
+  });
+});
+
+describe('statslinksGlobal', () => {
+  it('function "statslinksGlobal" should return files that are ".md"', () => {
+    expect( statsArrayGlobal(['link1','link2','link2'])).toEqual({ Total: '3', Unique: '2' })
+  });
+  it('function "statslinksGlobal" should return erro3 if the array has not ".md" files', () => {
+    expect( statsArrayGlobal('link1')).toBe('...no se puede analizar')
+  });
+});
 //-----
 
 

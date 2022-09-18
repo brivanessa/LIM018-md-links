@@ -115,7 +115,7 @@ const readmdLinks=(document) => {
 //console.log(readmdLinks('readmeExample.md'));
 
 // LINKS *************************+
-let docsLinkStatus=[];
+
 let linksGlobal=[];
 /*
 const readmdLinksGlobal= (document) => {
@@ -134,8 +134,7 @@ const readmdLinksGlobal= (document) => {
 }
 console.log(readmdLinksGlobal('readmeExample.md'));
 */
-// CON PROMESAS
-/*                                 YES TEST */
+/*   CON PROMESAS                              YES TEST */
 const converMdToHtml = (documentHtml) => {
     return new Promise((res,rej)=> {
         if(documentHtml!=''){
@@ -149,59 +148,57 @@ const converMdToHtml = (documentHtml) => {
     })
 }
 //console.log(converMdToHtml(`[Node.js](http://nodejs.og/)`))
-
+/// YES TEST
 const readDocuments = (document) => { 
     return new Promise((res,rej)=>{
         fs.promises.readFile(document,'utf-8')
         .then(data => { 
             res(data)
-            return((data))
+            //return((data))
         }) 
         .catch(error=>{
             rej((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-            return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+            //return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
         })
 
     })  
 }
 
-// const imprimirReadDocuments =async(document)=>{
-// console.log(await readDocuments(document))
-// }
-// imprimirReadDocuments('readmeExample.md')
-// imprimirReadDocuments('readmeExampl.md')
 
-//readDocuments('readmeVacio.md')
-// readDocuments('readmeExampl.md')
-// .then(data=>{
-//     console.log(data)
-//     return(data)}    
-// )
-// .catch(error=>{
-//     console.log(error)
-//     return(error)}
-// )
+// MD LINKS STATS     *************************************************************
+//           YES TEST*************************+
+let statLinks;
+const statsArrayGlobal= (arrayLinks) => {
+    if(typeof(arrayLinks)=='object'){
+        statLinks= 
+            { 'Total': `${arrayLinks.length}`,
+            'Unique': `${[...new Set(arrayLinks)].length}`}
+        return(statLinks)    
+    }
+    else{return('...no se puede analizar')}
+}
 
 //******** GLOBAL
 const readmdLinksGlobal = (document) => {   
-        return readDocuments(document)
-
-                .then(data => { 
-                    return  converMdToHtml(data)
-                    }) 
-                .catch(error=>{
-                        return error
-                    })    
-                .then(data => { 
-                    //console.log(data)
-                    return (data)
-                    }) 
-                .catch(error => { 
-                    //console.log(error)
-                    //return (error)
-                    return (error)
-                    })           
-    }
+    return readDocuments(document)
+        .then(data => { 
+            return  converMdToHtml(data)
+        }) 
+        .catch(error=>{
+            return error
+        })    
+         .then(data => { 
+            //console.log(data)
+            //console.log(statslinksGlobal(data))
+            return (statsArrayGlobal(data))
+        }) 
+        .catch(error => { 
+            //console.log(error)
+            //return (error)
+            return (error)
+        }) 
+            
+}
 
 
 // //readmdLinksGlobal('readmeVacio.md')
@@ -215,42 +212,45 @@ const readmdLinksGlobal = (document) => {
 //     return(error)}
 // )
 
+// MD LINKS STATUS CODE     *************************************************************
+//          Status *************************+
 
-
-
-
-
-// const readmdLinksGlobal = (document) => { 
-// //        
-// //     return readGlobal(document)
-// //             .then(data => { 
-// //                 return converMdToHtml(data)
-// //                 })   
-// //             .catch(error=>{
-// //                 return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}: el archivo está vacio`)
-// //             })
-// // }    
-//     return fs.promises.readFile(document,'utf-8')
-//             .catch(error=>{
-//                 return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-//             })
-//             .then(data => { 
-//                 return  converMdToHtml(data)
-//                 }) 
-//             .then(data => { 
-//                 //console.log(data)
-//                 return (data)
-//                 }) 
-//             .catch(error => { 
-//                 //console.log(error)
-//                 //return (error)
-//                 throw error
-//                 })           
-// }
-
-   
-// readmdLinksGlobal('readmeVacio.md')
-// //readmdLinksGlobal('readmeExample.md')
+let docsLinkStatusOk=[];
+let docsLinkStatusFail=[];
+const readmdLinkStatus = (link) => {
+    return new Promise ((res,rej)=> {
+            return axios.get(`${link}`)
+            .then( (response)=>{
+                res(docsLinkStatusOk.push({
+                    'href': `${link}`,
+                   // 'text': `${elemento.children[0].nodeValue}`,
+                    //'file': `${path.basename(document)}`,
+                    //'route': `${pathGlobal(document)}`,
+                    'status': `${ response.status}`,
+                    'result':  `${response.statusText}`,  
+                }))
+                //res(docsLinkStatusOk)
+             })
+            .catch((error)=>{
+                rej(docsLinkStatusFail.push({
+                    'href': `${link}`,
+                   // 'text': `${elemento.children[0].nodeValue}`,
+                    //'file': `${path.basename(document)}`,
+                    //'route': `${pathGlobal(document)}`,
+                    'status': `${error.code}`,
+                    'result':  `FAIL`,
+                })) 
+                //rej(docsLinkStatusFail)   
+            })
+        })
+}
+// //readmdLinksGlobal('readmeVacio.md')
+// let linksExample=[
+//     //'https://es.wikipedia.org/wiki/Markdown',
+//     //'http://nodejs.og/',
+//      'https://blueg.co.uk/404'
+//   ]
+// readmdLinkStatus(linksExample)
 // .then(data=>{
 //     console.log(data)
 //     return(data)}    
@@ -260,73 +260,57 @@ const readmdLinksGlobal = (document) => {
 //     return(error)}
 // )
 
+let linksExamples=[
+    'https://es.wikipedia.org/wiki/Markdown',
+    'http://nodejs.og/',
+    'https://blueg.co.uk/404'
+  ]
+linksExamples.map((links)=>{
+    return readmdLinkStatus(links)
+    .then(data=>{
+        console.log(data)
+        console.log(data)
 
-// MD LINKS STATS     *************************************************************
-//           *************************+
-let statLinks;
-/*
-const statslinksGlobal= async(document) => {
-    let arrayLinks = await (readmdLinksGlobal(document))
-    //console.log(arrayLinks)
-    return statLinks =
-        { 'Total': `${arrayLinks.length}`,
-        'Unique': `${[...new Set(arrayLinks)].length}`}
-    //return statLinks   
-}
-// const functionGlobalStats = async(document)=>{
-// console.log(await statslinksGlobal(document));
+        return(data)}    
+    )
+    .catch(error=>{
+        console.log(error)
+        return(error)}
+    )
+    
+}) 
+
+
+
+
+// const readmdLinkStatus= async(document) => {
+//     let linksArray = await (readmdLinksGlobal(document))
+//     //console.log(linksArray)
+//     linksArray.map((link)=> {
+//        axios.get(`${link}`)
+//         .then( (response)=>{
+//             return (docsLinkStatus.push({
+//                 'href': `${link}`,
+//                // 'text': `${elemento.children[0].nodeValue}`,
+//                 'file': `${path.basename(document)}`,
+//                 'route': `${pathGlobal(document)}`,
+//                 'status': `${ response.status}`,
+//                 'result':  `${response.statusText}`,
+//             }))
+//          })
+//         .catch((error)=>{
+//             return (docsLinkStatus.push({
+//                 'href': `${link}`,
+//                // 'text': `${elemento.children[0].nodeValue}`,
+//                 'file': `${path.basename(document)}`,
+//                 'route': `${pathGlobal(document)}`,
+//                 'status': `${error}`,
+//                 'result':  `FAIL`,
+//             })) 
+//         })
+//         return (docsLinkStatus) 
+//          })
 // }
-// functionGlobalStats('readmeExample.md')
-*/
-//
-const statslinksGlobal= (arrayLinks) => {
-    return statLinks =
-        { 'Total': `${arrayLinks.length}`,
-        'Unique': `${[...new Set(arrayLinks)].length}`}
-}
-
-const functionGlobalStats =(document)=>{
-            readmdLinksGlobal(document)
-            .then((data)=> {
-                //console.log(statslinksGlobal(data))
-                //return (statslinksGlobal(data))
-                //console.log(data)
-                return(data)
-            })
-    }
-//functionGlobalStats('readmeExample.md')
-//console.log(functionGlobalStats('readmeExample.md'))
-
-// MD LINKS STATUS CODE     *************************************************************
-//          Status *************************+
-const readmdLinkStatus= async(document) => {
-    let linksArray = await (readmdLinksGlobal(document))
-    //console.log(linksArray)
-    linksArray.map((link)=> {
-       axios.get(`${link}`)
-        .then( (response)=>{
-            return (docsLinkStatus.push({
-                'href': `${link}`,
-               // 'text': `${elemento.children[0].nodeValue}`,
-                'file': `${path.basename(document)}`,
-                'route': `${pathGlobal(document)}`,
-                'status': `${ response.status}`,
-                'result':  `${response.statusText}`,
-            }))
-         })
-        .catch((error)=>{
-            return (docsLinkStatus.push({
-                'href': `${link}`,
-               // 'text': `${elemento.children[0].nodeValue}`,
-                'file': `${path.basename(document)}`,
-                'route': `${pathGlobal(document)}`,
-                'status': `${error}`,
-                'result':  `FAIL`,
-            })) 
-        })
-        return (docsLinkStatus) 
-         })
-}
 
 //readmdLinkStatus('readmeExample.md');
 //console.log(readmdLinkStatus('readmeExample.md'))
@@ -426,7 +410,8 @@ module.exports = {
     pathReadMd,
     readmdLinks,
     readmdLinkStatus,
-    statslinksGlobal,
+    statsArrayGlobal,
+    readDocuments,
     //functionGlobalStats,
   };
   
