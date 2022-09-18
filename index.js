@@ -15,10 +15,10 @@ const colors = require('colors');
 
 // PATH
 
-// LA RUTA EXISTE           *************************************************************
+// LA RUTA EXISTE          YES TEST *************************************************************
 const existRoute =(route) => fs.existsSync(route)
 
-// RUTA ABSOLUTA Y NORMALIZADA **********************************************************
+// RUTA ABSOLUTA Y NORMALIZADA    YES TEST **********************************************************
 function pathGlobal(routaInput){
     return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
 }
@@ -37,7 +37,7 @@ function readFolder(ruta){
         return (fs.readdirSync(ruta).length === 0)?(error1): fs.readdirSync(ruta).map(doc=>{return path.join(rutaAbsoluta,doc)});
     } else {return (error2)}
 }
-//          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO *************************************
+//          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO  YES TEST *************************************
 function pathReadMd(carpetaArray){ 
     let mdFiles = carpetaArray.filter(doc => {return(path.extname(doc)==='.md')});
         if (mdFiles.length === 0){ 
@@ -47,14 +47,14 @@ function pathReadMd(carpetaArray){
             return mdFiles
         }
 }
-//          PASO 3: LISTA DE CARPETAS DE UN DIRECTORIO *************************************
+//          PASO 3: LISTA DE CARPETAS DE UN DIRECTORIO  YES TEST *************************************
 function pathReadFolders(carpetaArray){ 
     let folders = carpetaArray.filter(doc => {return(!!path.extname(doc)==false)});
         if (folders.length === 0){ 
             return(error4);
         } else {return folders}
 }
-//          PASO 4: LISTA DE ARCHIVOS DE UN DIRECTORIO CON RECURSIVIDAD *************************************
+//          PASO 4: LISTA DE ARCHIVOS DE UN DIRECTORIO CON RECURSIVIDAD  YES TEST *************************************
 const  pathRead = (ruta) => { 
     return new Promise((res,rej) => {
         if (readFolder(ruta)==error1){
@@ -79,6 +79,7 @@ const  pathRead = (ruta) => {
 //console.log(pathRead('folderFilesNoMd'))
 //console.log(pathRead('folderTestOneFileMd'))
 
+//****************************************** YES TEST*/
 const pathReadFile = (ruta)=> { 
     return new Promise((res,rej) => {
         if(path.extname(ruta)==='.md'){
@@ -89,7 +90,7 @@ const pathReadFile = (ruta)=> {
 
 //console.log(pathReadFile('readmeExample.md'))
 
-// MD LINKS LISTA DE LINKS ************************************************************
+// MD LINKS LISTA DE LINKS ***YES TEST (CAMBIAR fs.Sync)************************************************************
 let doclistLinks=[];
 const readmdLinks=(document) => {
     return new Promise ((res,rej)=>{
@@ -134,32 +135,130 @@ const readmdLinksGlobal= (document) => {
 console.log(readmdLinksGlobal('readmeExample.md'));
 */
 // CON PROMESAS
-const readmdLinksGlobal= (document) => {
-    
-            fs.promises.readFile(document,'utf-8')
-            .then(data => {
-             let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
-                mdToHtml('a').each( function(indice,elemento){
-                    linksGlobal.push(elemento.attributes[0].value) 
-                })
-                console.log(linksGlobal)
-                return((linksGlobal))
-            })    
-            .catch(error=>{
-                console.log(`${error.code}: No se encontro el archivo`)
-                return(`${error.code}: No se encontro el archivo`)})
-            
-       // }
+/*                                 YES TEST */
+const converMdToHtml = (documentHtml) => {
+    return new Promise((res,rej)=> {
+        if(documentHtml!=''){
+            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml}**.`));
+            mdToHtml('a').each( function(indice,elemento){
+                return linksGlobal.push(elemento.attributes[0].value)   
+            })
+            //console.log(linksGlobal)
+            res(linksGlobal)
+        } else {rej('no hay links...')}
+    })
 }
-readmdLinksGlobal('readmeExample.md')
-//readmdLinksGlobal('')
+//console.log(converMdToHtml(`[Node.js](http://nodejs.og/)`))
 
-//console.log(readmdLinksGlobal('readmeExample.md'));
-//console.log(readmdLinksGlobal('readmeVacio.md'));
+const readDocuments = (document) => { 
+    return new Promise((res,rej)=>{
+        fs.promises.readFile(document,'utf-8')
+        .then(data => { 
+            res(data)
+            return((data))
+        }) 
+        .catch(error=>{
+            rej((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+            return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+        })
+
+    })  
+}
+
+// const imprimirReadDocuments =async(document)=>{
+// console.log(await readDocuments(document))
+// }
+// imprimirReadDocuments('readmeExample.md')
+// imprimirReadDocuments('readmeExampl.md')
+
+//readDocuments('readmeVacio.md')
+// readDocuments('readmeExampl.md')
+// .then(data=>{
+//     console.log(data)
+//     return(data)}    
+// )
+// .catch(error=>{
+//     console.log(error)
+//     return(error)}
+// )
+
+//******** GLOBAL
+const readmdLinksGlobal = (document) => {   
+        return readDocuments(document)
+
+                .then(data => { 
+                    return  converMdToHtml(data)
+                    }) 
+                .catch(error=>{
+                        return error
+                    })    
+                .then(data => { 
+                    //console.log(data)
+                    return (data)
+                    }) 
+                .catch(error => { 
+                    //console.log(error)
+                    //return (error)
+                    return (error)
+                    })           
+    }
+
+
+// //readmdLinksGlobal('readmeVacio.md')
+// readmdLinksGlobal('readmeExample.md')
+// .then(data=>{
+//     console.log(data)
+//     return(data)}    
+// )
+// .catch(error=>{
+//     console.log(error)
+//     return(error)}
+// )
 
 
 
 
+
+
+// const readmdLinksGlobal = (document) => { 
+// //        
+// //     return readGlobal(document)
+// //             .then(data => { 
+// //                 return converMdToHtml(data)
+// //                 })   
+// //             .catch(error=>{
+// //                 return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}: el archivo está vacio`)
+// //             })
+// // }    
+//     return fs.promises.readFile(document,'utf-8')
+//             .catch(error=>{
+//                 return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+//             })
+//             .then(data => { 
+//                 return  converMdToHtml(data)
+//                 }) 
+//             .then(data => { 
+//                 //console.log(data)
+//                 return (data)
+//                 }) 
+//             .catch(error => { 
+//                 //console.log(error)
+//                 //return (error)
+//                 throw error
+//                 })           
+// }
+
+   
+// readmdLinksGlobal('readmeVacio.md')
+// //readmdLinksGlobal('readmeExample.md')
+// .then(data=>{
+//     console.log(data)
+//     return(data)}    
+// )
+// .catch(error=>{
+//     console.log(error)
+//     return(error)}
+// )
 
 
 // MD LINKS STATS     *************************************************************
@@ -323,7 +422,7 @@ module.exports = {
     pathReadFile,
     pathReadFolders,
     pathRead,
-    readmdLinksGlobal,
+    converMdToHtml,
     pathReadMd,
     readmdLinks,
     readmdLinkStatus,

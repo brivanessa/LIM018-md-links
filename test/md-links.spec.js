@@ -13,7 +13,7 @@ const {
   existRoute,
   pathGlobal,
   pathReadFile,
-  readmdLinksGlobal,
+  converMdToHtml,
   pathReadMd,
   pathReadFolders,
   pathRead,
@@ -43,29 +43,29 @@ const readmeExampleLinks = [
 ]
 
 describe('existRoute', () => {
-  it('Route "readmeExample.md" should return true', () => {
+  it('Route "readmeExample.md" should return TRUE', () => {
     expect(existRoute('readmeExample.md')).toBe(true)
   });
-  it('Route "readmeExamp.md" should return true', () => {
+  it('Route "readmeExamp.md" should return FALSE', () => {
     expect(existRoute('readmeExamp.md')).toBe(false)
   });
 });
 
 describe('pathGlobal', () => {
-  it('Route "readmeExample.md" should return true', () => {
+  it('Relative route "readmeExample.md" should return absolute route', () => {
     expect(pathGlobal('readmeExample.md')).toBe(fileRoute)
   });
-  it('Route "readmeExamp.md" should return true', () => {
+  it('Route "readmeExample.md" should return absolute route', () => {
     expect(pathGlobal(fileRouteNormalize)).toBe(fileRoute)
   });
 });
 
 
-describe(' pathReadFolders', () => {
-  it('Route "pathReadFolders" should return true', () => {
+describe('pathReadFolders', () => {
+  it('Route "pathReadFolders" should return only folders', () => {
     expect( pathReadFolders(folderArray)).toEqual(folderArray2)
   });
-  it('Route "readmeExamp.md" should return true', () => {
+  it('Route "pathReadFolders" should return error4 if the array of folder dont have folders', () => {
     expect( pathReadFolders(folderArray3)).toBe('no hay folders en la carpeta')
   });
 });
@@ -90,10 +90,10 @@ describe('pathRead', () => {
 });
 
 describe(' pathReadMd', () => {
-  it('Route " pathReadMd" should return true', () => {
+  it('function "pathReadMd" should return files that are ".md"', () => {
     expect( pathReadMd(folderArray)).toHaveLength(1)
   });
-  it('Route "readmeExamp.md" should return true', () => {
+  it('function "pathReadMd" should return erro3 if the array has not ".md" files', () => {
     expect( pathReadMd(folderArray2)).toBe('no hay archivos .md en la carpeta')
   });
 });
@@ -111,7 +111,7 @@ describe(' pathReadFile', () => {
     });
   });
 });
-
+/// cambiar sync ------
 describe('readmdLinks', () => {
   test('readmdLinks', async() => {
     return readmdLinks('readmeVacio.md').catch(error=>{
@@ -126,20 +126,39 @@ describe('readmdLinks', () => {
   });
 });
 
-describe('readmdLinksGlobal', () => {
-  test('readmdLinksGlobal', async() => {
-    return readmdLinksGlobal('readmeVacio.md').catch(error=>{
-      expect(error).toBe('el archivo esta vacio');
+
+describe('converMdToHtml', () => {
+  test('converMdToHtml', async() => {
+    return converMdToHtml('').catch(error=>{
+      expect(error).toBe('no hay links...');
     });
   });
 
-  test('readmdLinksGlobal', async() => {
-    return readmdLinksGlobal('readmeExample.md').then(data=>{
-      expect(data).toEqual(readmeExampleLinks);
+  test('converMdToHtml', async() => {
+    return converMdToHtml(`[Node.js](http://nodejs.og/)`).then(data=>{
+      expect(data).toHaveLength(1);
     });
   });
 });
 
+//-----
+
+
+// describe('readmdLinksGlobal', () => {
+//   test('readmdLinksGlobal', async() => {
+//     return readmdLinksGlobal('readmeVacio.md').catch(error=>{
+//       expect(error).toBe('undefined: el archivo esta vacio');
+//     });
+//   });
+
+//   test('readmdLinksGlobal', async() => {
+//     return readmdLinksGlobal('readmeExample.md').then(data=>{
+//       expect(data).toEqual(readmeExampleLinks);
+//     });
+//   });
+// });
+
+/*
 describe('readmdLinkStatus', () => {
   test('readmdLinkStatus', async() => {
     return readmdLinkStatus('readmeVacio.md').catch(error=>{
@@ -172,3 +191,4 @@ describe('functionGlobalStats', () => {
     });
   });
 });
+*/
