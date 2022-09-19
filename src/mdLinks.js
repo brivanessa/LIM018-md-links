@@ -27,28 +27,34 @@ const mdLinks = (route,elements) => {
             console.log(`*******************************************************************`.yellow)
             console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:false}'.bgRed}) ----- mdLinks ` )
             console.log(`*******************************************************************`.yellow)
-            if(path.extname(route)=='.md'&& mainFunctions.existRoute(route)){
+            if(path.extname(route)=='.md'){
                 mainFunctions.pathReadFile(route)
                 .then(data =>{return mainFunctions.readmdLinks(data)})
                 .catch(error => console.log(error))
-                res(doclistLinks)
+                res(mainFunctions.doclistLinks)
             }    
             else{
                 mainFunctions.pathRead(route)
                 .then(data => data.map((item)=>{return mainFunctions.readmdLinks(item)}))
                 .catch(data=>console.log(data))
-                res(doclistLinks)
+                res(mainFunctions.doclistLinks)
             } 
         
         } else if (elements.stats==true) {
             console.log(`*******************************************************************`.yellow)
             console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{stats}'.bgYellow}) ----- mdLinks ` )
             console.log(`*******************************************************************`.yellow)
-            if(path.extname(route)=='.md'&& mainFunctions.existRoute(route)){
+            if(path.extname(route)=='.md'){
                 mainFunctions.pathReadFile(route)
-                .then(data =>{ return mainFunctions.statsOption(mainFunctions.readmdLinksGlobal(data))})
+                .then(data =>{ 
+                    return mainFunctions.converMdToHtml(data)})
                 .catch(error => console.log(error))
-                res()
+                .then(data =>{                     
+                    return (mainFunctions.statsArrayGlobal(data))})
+                .catch(error => console.log(error))
+                .then(data =>{return(data)})
+                .catch(error => console.log(error))
+                res(mainFunctions.statLinks)
             }    
             else{
                 pathRead(route)
@@ -59,7 +65,7 @@ const mdLinks = (route,elements) => {
             
         } else if  (elements.validate==true) {
 
-            if(path.extname(route)=='.md'&& mainFunctions.existRoute(route)){
+            if(path.extname(route)=='.md'){
                 pathReadFile(route)
                 .then(data =>{return readmdLinkStatus(data)})
                 .catch(error => console.log(error))
