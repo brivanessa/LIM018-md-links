@@ -124,7 +124,7 @@ const readDocuments = (document) => {
     // return new Promise((res,rej)=>{
         return fs.promises.readFile(document,'utf-8')
         .then(data => { 
-            return(data)
+            return([document,data])
             //return((data))
         }) 
         .catch(error=>{
@@ -175,51 +175,62 @@ const readmdLinkdeMd = (document) => {
     return readDocuments(document)
         .then(data => { 
             //console.log(data)
-            return(converMdToHtml(data))   
-        })
-        .catch(error=>{ return error }) 
-        .then(data => { 
-            //return(readmdLinkStatus(data))   
-            return Promise.all(data.map((link)=>{
-                return axios.get(link)
-                .then( (response)=>{
-                    docsLinkStatusOk=({
-                        //'text': `${elemento.children[0].nodeValue}`,
-                        'file': `${path.basename(document)}`,
-                        'href': `${link}`,
-                        'status': `${response.status}`,
-                        'result':  `${response.statusText}`,  
-                    })
-                    return (docsLinkStatusOk)
+            if(data!=''){
+
+                let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data[1]}**.`));
+                mdToHtml('a').each( function(indice,elemento){
+                    linksGlobal.push([data[0],elemento.children[0].nodeValue,elemento.attributes[0].value]) 
+                    //console.log(linksGlobal)
+                    return linksGlobal  
+                    //console.log(linksGlobal)
                 })
-                .catch((error) => {
-                   if (error.response) {
-                       docsLinkStatusFail=({
-                            'file': `${path.basename(document)}`,
-                            'href': `${link}`,
-                            'status': `${error.response.status}`,
-                            'result':  `FAIL`,
+                return Promise.all(linksGlobal.map((link)=>{
+                    //console.log(link[1])
+                    return axios.get(link[2])
+                    .then( (response)=>{
+                        docsLinkStatusOk=({
+                            //'text': `${elemento.children[0].nodeValue}`,
+                            'file': `${link[0]}`,
+                            'text': `${link[1]}`,
+                            'href': `${link[2]}`,
+                            'status': `${response.status}`,
+                            'result':  `${response.statusText}`,  
                         })
-                        return (docsLinkStatusFail)
-                    } else if (error.request) {
-                        docsLinkStatusFail=({
-                            'file': `${path.basename(document)}`,
-                            'href': `${link}`,
-                            'status': `${error.request.status}: no se recibió respuesta`,
-                            'result':  `FAIL`,
-                        })
-                        return(docsLinkStatusFail)
-                    } else {
-                        docsLinkStatusFail=({
-                            'file': `${path.basename(document)}`,
-                            'href': `${link}`,
-                            'status': `${error.message}`,
-                            'result':  `FAIL`,
-                        })
-                        return(docsLinkStatusFail)
-                    } 
-                }); 
-            }))
+                        return (docsLinkStatusOk)
+                    })
+                    .catch((error) => {
+                       if (error.response) {
+                           docsLinkStatusFail=({
+                                'file': `${link[0]}`,
+                                'text': `${link[1]}`,
+                                'href': `${link[2]}`,
+                                'status': `${error.response.status}`,
+                                'result':  `FAIL`,
+                            })
+                            return (docsLinkStatusFail)
+                        } else if (error.request) {
+                            docsLinkStatusFail=({
+                                'file': `${link[0]}`,
+                                'text': `${link[1]}`,
+                                'href': `${link[2]}`,
+                                'status': `${error.request.status}: no se recibió respuesta`,
+                                'result':  `FAIL`,
+                            })
+                            return(docsLinkStatusFail)
+                        } else {
+                            docsLinkStatusFail=({
+                                'file': `${link[0]}`,
+                                'text': `${link[1]}`,
+                                'href': `${link[2]}`,
+                                'status': `${error.message}`,
+                                'result':  `FAIL`,
+                            })
+                            return(docsLinkStatusFail)
+                        } 
+                    }); 
+                }))
+
+            } else {return('no hay links...')}   
         })
         .catch(error=>{ return error }) 
     }
