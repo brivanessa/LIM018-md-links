@@ -9,7 +9,7 @@
 
 // });
 const {
-  mdLinks,
+  //mdLinks,
   existRoute,
   pathGlobal,
   pathReadFile,
@@ -21,7 +21,7 @@ const {
   readDocuments,
   readmdLinkStatus,
   statsArrayGlobal,
-} = require('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/index.js');
+} = require('../src/main.js')
 jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
@@ -165,7 +165,23 @@ describe('statslinksGlobal', () => {
   });
 });
 //-----
-
+describe('readmdLinkStatus', () => {
+  test('readmdLinkStatus', async() => {
+    return readmdLinkStatus('https://www.kualo.co.uk/404').catch(error=>{
+      expect(error.response).toBe('404');
+    });
+  });
+test('readmdLinkStatus', async() => {
+    return readmdLinkStatus('http://nodejs.og/').catch(error=>{
+      expect(error.request).toBe('undefined: no se recibió respuesta');
+    });
+  });
+  test('readmdLinkStatus', async() => {
+    return readmdLinkStatus('https://es.wikipedia.org/wiki/Markdown').then(data=>{
+      expect(response).toBe('200');
+    });
+  });
+});
 
 // describe('readmdLinksGlobal', () => {
 //   test('readmdLinksGlobal', async() => {
