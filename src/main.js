@@ -184,7 +184,8 @@ const readmdLinkdeMd = (document) => {
                 return axios.get(link)
                 .then( (response)=>{
                     docsLinkStatusOk=({
-                        
+                        //'text': `${elemento.children[0].nodeValue}`,
+                        'file': `${path.basename(document)}`,
                         'href': `${link}`,
                         'status': `${response.status}`,
                         'result':  `${response.statusText}`,  
@@ -194,6 +195,7 @@ const readmdLinkdeMd = (document) => {
                 .catch((error) => {
                    if (error.response) {
                        docsLinkStatusFail=({
+                            'file': `${path.basename(document)}`,
                             'href': `${link}`,
                             'status': `${error.response.status}`,
                             'result':  `FAIL`,
@@ -201,6 +203,7 @@ const readmdLinkdeMd = (document) => {
                         return (docsLinkStatusFail)
                     } else if (error.request) {
                         docsLinkStatusFail=({
+                            'file': `${path.basename(document)}`,
                             'href': `${link}`,
                             'status': `${error.request.status}: no se recibió respuesta`,
                             'result':  `FAIL`,
@@ -208,6 +211,7 @@ const readmdLinkdeMd = (document) => {
                         return(docsLinkStatusFail)
                     } else {
                         docsLinkStatusFail=({
+                            'file': `${path.basename(document)}`,
                             'href': `${link}`,
                             'status': `${error.message}`,
                             'result':  `FAIL`,
