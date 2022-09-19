@@ -1,8 +1,5 @@
 //instalar modulos
 const fs = require('fs'); // Se importa en una var fs mediante require el modulo file_system 
-//const { promises } =require ('fs');
-//import { readFile } from 'node:fs/promises'
-//const readFile = require('fs/promises');
 
 const path = require('path');
 // En consola : npm install  marked 
@@ -218,10 +215,10 @@ const readmdLinksGlobal = (document) => {
 let docsLinkStatusOk=[];
 let docsLinkStatusFail=[];
 const readmdLinkStatus = (link) => {
-    return new Promise ((res,rej)=> {
+    // return new Promise ((res,rej)=> {
             return axios.get(`${link}`)
             .then( (response)=>{
-                res(docsLinkStatusOk.push({
+                (docsLinkStatusOk.push({
                     'href': `${link}`,
                    // 'text': `${elemento.children[0].nodeValue}`,
                     //'file': `${path.basename(document)}`,
@@ -229,60 +226,194 @@ const readmdLinkStatus = (link) => {
                     'status': `${ response.status}`,
                     'result':  `${response.statusText}`,  
                 }))
-                //res(docsLinkStatusOk)
-             })
-            .catch((error)=>{
-                rej(docsLinkStatusFail.push({
-                    'href': `${link}`,
-                   // 'text': `${elemento.children[0].nodeValue}`,
-                    //'file': `${path.basename(document)}`,
-                    //'route': `${pathGlobal(document)}`,
-                    'status': `${error.code}`,
-                    'result':  `FAIL`,
-                })) 
-                //rej(docsLinkStatusFail)   
+                return(docsLinkStatusOk)
             })
-        })
-}
-// //readmdLinksGlobal('readmeVacio.md')
-// let linksExample=[
-//     //'https://es.wikipedia.org/wiki/Markdown',
-//     //'http://nodejs.og/',
-//      'https://blueg.co.uk/404'
-//   ]
-// readmdLinkStatus(linksExample)
-// .then(data=>{
-//     console.log(data)
-//     return(data)}    
-// )
-// .catch(error=>{
-//     console.log(error)
-//     return(error)}
-// )
+            .catch((error) => {
+               if (error.response) {
+                  // La respuesta fue hecha y el servidor respondió con un código de estado
+                  // que esta fuera del rango de 2xx
+                   (docsLinkStatusFail.push({
+                        'href': `${link}`,
+                    // 'text': `${elemento.children[0].nodeValue}`,
+                        //'file': `${path.basename(document)}`,
+                        //'route': `${pathGlobal(document)}`,
+                        'status': `${error.response.status}`,
+                        'result':  `FAIL`,
+                    }))
+                    return (docsLinkStatusFail)
+                } else if (error.request) {
+                  // La petición fue hecha pero no se recibió respuesta
+                  // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
+                  // http.ClientRequest en node.js
+                  //console.log(error.request);
+                    (docsLinkStatusFail.push({
+                        'href': `${link}`,
+                    // 'text': `${elemento.children[0].nodeValue}`,
+                        //'file': `${path.basename(document)}`,
+                        //'route': `${pathGlobal(document)}`,
+                        'status': `${error.request}`,
+                        'result':  `FAIL`,
+                    }))
+                    return (docsLinkStatusFail)
+                } else {
+                  // Algo paso al preparar la petición que lanzo un Error
+                  //console.log('Error', error.message);
+                    (docsLinkStatusFail.push({
+                        'href': `${link}`,
+                    // 'text': `${elemento.children[0].nodeValue}`,
+                        //'file': `${path.basename(document)}`,
+                        //'route': `${pathGlobal(document)}`,
+                        'status': `error`,
+                        'result':  `FAIL`,
+                    }))
+                    return (docsLinkStatusFail)
+                } 
+            }); 
+    //  })
+}  
+  
+const readmdLinkStatus3 = (link) => {
+    return new Promise ((res,rej)=> {
+            return axios.get(`${link}`)
+            .then( (response)=>{
+                docsLinkStatusOk.push({
+                    'href': `${link}`,
+                    'status': `${ response.status}`,
+                    'result':  `${response.statusText}`,  
+                })
+                res(docsLinkStatusOk)
+            })
+            .catch((error) => {
+               if (error.response) {
+                   docsLinkStatusFail.push({
+                        'href': `${link}`,
+                        'status': `${error.response.status}`,
+                        'result':  `FAIL`,
+                    })
+                    rej (docsLinkStatusFail)
+                } else if (error.request) {
+                    docsLinkStatusFail.push({
+                        'href': `${link}`,
+                        'status': `${error.request.status}: no se recibió respuesta`,
+                        'result':  `FAIL`,
+                    })
+                    rej(docsLinkStatusFail)
+                } else {
+                    docsLinkStatusFail.push({
+                        'href': `${link}`,
+                        'status': `${error.message}`,
+                        'result':  `FAIL`,
+                    })
+                    rej(docsLinkStatusFail)
+                } 
+            }); 
+     })
+}    
 
-let linksExamples=[
-    'https://es.wikipedia.org/wiki/Markdown',
-    'http://nodejs.og/',
-    'https://blueg.co.uk/404'
-  ]
-linksExamples.map((links)=>{
-    return readmdLinkStatus(links)
+///*
+//let linksExamples=['https://es.wikipedia.org/wiki/Markdown'];
+// let linksExamples= [
+//   //'https://es.wikipedia.org/wiki/Markdown',
+//   //'https://es.wikipedia.org/wiki/Markdown',
+//   //'https://www.kualo.co.uk/404',
+//     'https://www.kualo.co.uk/404',
+//   //'http://nodejs.og/',
+//   //'https://blueg.co.uk/404'
+//   ]
+
+//   const xxx =async (document)=>{
+//     console.log(await readmdLinkStatus(document))
+//   }
+//   xxx(linksExamples)
+ 
+/*
+readmdLinkStatus3(linksExamples)
     .then(data=>{
         console.log(data)
-        console.log(data)
-
+       // console.log(docsLinkStatusOk)
         return(data)}    
     )
     .catch(error=>{
         console.log(error)
+       // console.log(docsLinkStatusFail)
         return(error)}
     )
+*/  
+// MD LINKS STATUS CODE  FINAL    *************************************************************
+
+///******** GLOBAL 
+let newArray =[]
+let newArray2 =[]
+let linksExamples2= [
+   'https://es.wikipedia.org/wiki/Markdown',
+    //'https://es.wikipedia.org/wiki/Markdown',
+    'https://www.kualo.co.uk/404',
+    //'https://www.kualo.co.uk/404',
+    'http://nodejs.or/',
+    //'https://blueg.co.uk/404'
+    ]
+//******** GLOBAL
+const readmdLinksGlobal2 = (data) => {   
+    return data.map((element) => {
+        //console.log(`'${element}'`)
+        return (readmdLinkStatus3(`${element}`))
+        .then((data)=>{
+             console.log(data)
+            return(data)})  
+        .catch(error=>{
+            console.log(error)
+             return(error)})
+    })
+}
+ //}
     
-}) 
+// const impr = async(document)=>{
+//     {console.log(await(readmdLinksGlobal2(document)))}
+// };
+
+// impr(linksExamples2)
 
 
+let docsLinkStatus=[]
+const readmdLinkStatusw= (linksArray) => {
+    linksArray.map((link)=> {
+       axios.get(`${link}`)
+        .then( (response)=>{
+            return (docsLinkStatus.push({
+                'href': `${link}`,
+               // 'text': `${elemento.children[0].nodeValue}`,
+                //'file': `${path.basename(document)}`,
+                //'route': `${pathGlobal(document)}`,
+                'status': `${ response.status}`,
+                'result':  `${response.statusText}`,
+            }))
+         })
+        .catch((error)=>{
+            return (docsLinkStatus.push({
+                'href': `${link}`,
+               // 'text': `${elemento.children[0].nodeValue}`,
+                //'file': `${path.basename(document)}`,
+                //'route': `${pathGlobal(document)}`,
+                'status': `${error}`,
+                'result':  `FAIL`,
+            })) 
+        })
+        return (docsLinkStatus) 
+         })
+}
+
+// readmdLinkStatusw(linksExamples2);
+// //console.log(readmdLinkStatusw(linksExamples2))
+// setTimeout(()=>{console.log(docsLinkStatus)},1000)
+const impr = async(document)=>{
+    readmdLinkStatusw(document)
+    return console.log(await docsLinkStatus)
+}
+
+impr(linksExamples2)
 
 
+///******** GLOBAL 
 // const readmdLinkStatus= async(document) => {
 //     let linksArray = await (readmdLinksGlobal(document))
 //     //console.log(linksArray)
