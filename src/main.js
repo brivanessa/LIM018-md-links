@@ -119,16 +119,54 @@ console.log(readmdLinks('../readmeExample.md'));
 
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
 let linksGlobal=[];
+let leerDocs=[]
 /*---------------------- PASO 1: LEER .MD            YES TEST **************/
 const readDocuments = (document) => { 
     return fs.promises.readFile(document,'utf-8')
     .then(data => { 
+        leerDocs.push([document,data])
         return([document,data])
     }) 
     .catch(error=>{
         return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
     })
 }
+/*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
+const readDocumentsArr = (documentArr) => { 
+    return Promise.all(
+        documentArr.map((document)=>{
+                return readDocuments(document)
+                .then(data => { 
+                    return data})
+                .catch(error=>{
+                    return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+                }) 
+            })
+    )              
+}
+
+let arrrayEjemplo= [
+    '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md',
+    '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/aeadmExample.md',
+    '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/readmeExample2.md',
+    '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/fs/ffs/readmeExample.md'
+  ]
+//readDocumentsArr(arrrayEjemplo) 
+// .then((data)=> {console.log('aqui',data)})
+// .catch((error)=> {return (error)}) 
+//console.log('aqui',readDocumentsArr(arrrayEjemplo) )
+readDocumentsArr(arrrayEjemplo)
+.then(data =>{
+    return data.map((item)=>{
+        return converMdToHtml(item)
+    })
+})
+.then(data =>{
+    console.log(data[0])
+    return(data[0])
+    })
+
+
 /*---------------------- PASO 2: convertir Md a HTML       YES TEST **************/
 const converMdToHtml = (documentHtml) => {
         if(documentHtml!=''){
@@ -139,6 +177,15 @@ const converMdToHtml = (documentHtml) => {
             return(linksGlobal)
         } else {return('no hay links...')}
 }
+// const converMdToHtml = (documentHtml) => {
+//     if(documentHtml!=''){
+//         let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml[1]}**.`));
+//         mdToHtml('a').each( function(indice,elemento){
+//             return linksGlobal.push([documentHtml[0],elemento.children[0].nodeValue,elemento.attributes[0].value])  
+//         })
+//         return(linksGlobal)
+//     } else {return('no hay links...')}
+// }
 /******** PROBANDO converMdToHtml 
 console.log(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)']))
 ////result:[ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ]

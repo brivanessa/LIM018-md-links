@@ -83,27 +83,37 @@ const mdLinks = (route,elements) => {
                 })
                 .catch(error=>{  rej(error) }) 
                 .then(data => { 
-                    res(mainFunctions.readmdLinkStatus(data))
+                    return(mainFunctions.readmdLinkStatus(data))
                 })
-                .catch(error=>{ rej(error) })    
+                .catch(error=>{ rej(error) })  
+                .then(data => { 
+                    res((data))
+                })
+                .catch(error=>{ rej(error) })   
             }  
 
             else if (mainFunctions.existRoute(route)){
                 let folder=mainFunctions.pathRead(route);
-                Promise.all(
-                    folder.map((item)=>{
-                        return mainFunctions.readDocuments(item)
-                        .then(data => { 
-                            return(mainFunctions.converMdToHtml(data))
-                        })
-                        .catch(error=>{rej(error)}) 
-                        .then(data => { 
-                            res((data[data.length-1]))
-                            console.log(data[data.length-1])
-                        })
-                        .catch(error=>{rej(error)}) 
-                    }))
-                let datos=mainFunctions.linksGlobal
+                console.log(folder)
+                // let xx = folder.map((item)=>{return(mainFunctions.linksGlobal)})
+                // console.log(xx)
+                //console.log(xxx)
+                    // .then(data => { 
+                    //     Promise.all(data
+                    //     return(mainFunctions.readmdLinkStatus(data))
+                    //     .then((data)=> {res(data)})
+                    //     .catch((error)=> {rej(error)})
+                        
+                        
+
+                    // })
+                    // .catch(error=>{ rej(error) })  
+                    // .then(data => { 
+                    //     res((data))
+                    // })
+                    // .catch(error=>{ rej(error) }) 
+                //}
+                //let datos=mainFunctions.linksGlobal
                 //console.log(datos)
                 
                 //res(mainFunctions.docsLinkStatusOk)  

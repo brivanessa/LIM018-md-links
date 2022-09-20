@@ -39,6 +39,7 @@ const mdlinksFunction = require('./mdLinks.js');
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVo.md',{validate:true});
 
+//F
 //const mdLinks2 = mdlinksFunction.mdLinks('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta',{validate:true});
 const mdLinks2 = mdlinksFunction.mdLinks('../carpeta',{validate:true});
 // const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{validate:true});
