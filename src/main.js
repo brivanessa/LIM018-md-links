@@ -104,6 +104,18 @@ const readmdLinks=(document) => {
 /******** PROBANDO eadmdLinks 
 console.log(readmdLinks('../readmeExample.md'));
 */
+// PARA LOS LINKS
+
+
+
+
+
+
+
+
+
+
+
 
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
 let linksGlobal=[];
@@ -266,6 +278,22 @@ readmdLinkdeMd('../readmeExample.md')
     })
 //*/
 
+/*---------------------- PASO3: STATS DE LINKS       **************/
+let statLinksLast;
+const statsArray= (arrayLinks) => {
+    if(typeof(arrayLinks)=='object'){
+        statLinksLast= 
+            { 'Total': `${arrayLinks.length}`,
+            'Unique': `${[...new Set(arrayLinks)].length}`}
+        return(statLinksLast)    
+    }
+    else{return('...no se puede analizar')}
+}
+/******** PROBANDO statsArrayGlobal 
+console.log(statsArray(['https://es.wikipedia.org/wiki/Markdown','https://es.wikipedia.org/wiki/Markdown','https://www.kualo.co.uk/404']))
+////result: { Total: '3', Unique: '2' }
+//*/
+
 module.exports = {
     //mdLinks,
     existRoute,
@@ -279,8 +307,12 @@ module.exports = {
     readmdLinkStatus,
     statsArrayGlobal,
     readDocuments,
+    statsArray,
+    linksGlobal,
     doclistLinks,
     statLinks,
+    docsLinkStatusOk,
+    docsLinkStatusFail,
     //functionGlobalStats,
   };
   
