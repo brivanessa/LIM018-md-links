@@ -45,17 +45,18 @@ const mdlinksFunction = require('./mdLinks.js');
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesNoMd',{validate:true});// revisar que me salga error
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFiles0',{validate:true}); // revisar que me salga error
-const mdLinks2 = mdlinksFunction.mdLinks('../folderFilefvsvfsvs0',{validate:true}); // revisar que me salga error
+//const mdLinks2 = mdlinksFunction.mdLinks('../folderFilefvsvfsvs0',{validate:true}); // revisar que me salga error
 
 
+const elements = [{validate:true},'stats']
+//console.log(elements[0])
+console.log(elements)
 
 
+// mdLinks2.then((data)=>{
+//     console.log(data)
+// },(error)=>{
+//     console.log(`Error: ${error}`)
 
-
-mdLinks2.then((data)=>{
-    console.log(data)
-},(error)=>{
-    console.log(`Error: ${error}`)
-
-    return (`Error: ${error}`)
-})
+//     return (`Error: ${error}`)
+// })

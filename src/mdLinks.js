@@ -3,7 +3,6 @@ const colors = require('colors');
 const mainFunctions = require('./main.js')
 const path = require('path');
 // CREANDO PROMESAS => MDLINKS *************************************************************
-
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
         if (!!elements==false) {
@@ -54,9 +53,7 @@ const mdLinks = (route,elements) => {
                     let linksDelMd=mainFunctions.converMdToHtml(data);
                     res(mainFunctions.statsArrayGlobal(linksDelMd));
                 }) 
-                .catch(error=>{ 
-                    rej(error)
-                }) 
+                .catch(error=>{ rej(error)}) 
             }    
             else if(mainFunctions.existRoute(route)){
                 let folder=mainFunctions.pathRead(route);
@@ -91,7 +88,6 @@ const mdLinks = (route,elements) => {
                 })
                 .catch(error=>{ rej(error) })   
             }  
-
             else if (mainFunctions.existRoute(route)){
                 let folder=mainFunctions.pathRead(route);
                 mainFunctions.readDocumentsArr(folder)
@@ -112,6 +108,45 @@ const mdLinks = (route,elements) => {
             } else {
                 res('La ruta no existe..')
             }
+        } else if  (elements.validate==true) {
+            console.log(`*******************************************************************`.yellow)
+            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
+            console.log(`*******************************************************************`.yellow)
+            if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
+                return mainFunctions.readDocuments(route)
+                .then(data => { 
+                    return mainFunctions.converMdToHtml(data)
+                })
+                .catch(error=>{  rej(error) }) 
+                .then(data => { 
+                    return(mainFunctions.readmdLinkStatus(data))
+                })
+                .catch(error=>{ rej(error) })  
+                .then(data => { 
+                    res((data))
+                })
+                .catch(error=>{ rej(error) })   
+            }  
+            else if (mainFunctions.existRoute(route)){
+                let folder=mainFunctions.pathRead(route);
+                mainFunctions.readDocumentsArr(folder)
+                .then(data =>{
+                    return data.map((item)=>{
+                        return mainFunctions.converMdToHtml(item)
+                    })
+                })
+                .catch(error=>{ rej(error) })  
+                .then(data =>{
+                    return(mainFunctions.readmdLinkStatus(...new Set(data)))
+                    })
+                .catch(rej('La carpeta no contiene files ".md"..'))      
+                .then(data =>{
+                        res(data)
+                    })
+                .catch(error=>{ rej(error) })  
+            } else {
+                res('La ruta no existe..')
+            }    
         } else {
             return('La ruta no existe..')
         }
@@ -120,3 +155,5 @@ const mdLinks = (route,elements) => {
 module.exports = {
     mdLinks,
   };
+
+  //statsArrayStatus

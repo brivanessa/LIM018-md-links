@@ -218,6 +218,51 @@ readDocuments('../readmeAllOkLinks.md')
 
 */
 
+/*---------------------- PASO3: STATS DE LINKS  CON STATUS            YES TEST **************/
+let statLinksStat;
+const statsArrayStatus= (arrayLinks) => {
+    if(typeof(arrayLinks)=='object'){
+        let links=arrayLinks.map((link)=>{return(link.href)})  
+        let files=arrayLinks.map((link)=>{return(link.file)})    
+        let linksOk=(arrayLinks.map((link)=>{return(link.result)})).filter((result)=>{return(result=='OK')})    
+        statLinks = { 
+            'Files': `${[...new Set(files)].length}`,
+            'Total': `${links.length}`,
+            'Ok': `${linksOk.length}`,
+            'Broquen': `${links.length-linksOk.length}`,
+            'Unique': `${[...new Set(links)].length}`,
+            'UniqueOk': `${[...new Set(linksOk)].length}`,
+            'UniqueBroquen': `${[...new Set(links)].length-[...new Set(linksOk)].length}`,
+        }
+        return(statLinks)    
+    }
+    else{return('...no se puede analizar')}
+}
+/*
+let ejemplo =[
+    {
+      file: '/Users/',
+      href: 'https://es.wikipedia.org/wiki/Markdown',
+      result: 'OK'
+    },
+    {
+      file: '/Users/',
+      href: 'https://es.wikipedia.org/wiki/Markdown',
+      result: 'OK'
+    },
+    {
+        file: '/Users/',
+        href: 'https://es.wikipedia.org/wiki/Markdo',
+        result: 'OK'
+    },
+    {
+        file: '/Users/',
+        href: 'https://es.wikipedia.org/wiki/Markdown',
+        result: 'FAIL'
+    },
+]  
+console.log(statsArrayStatus(ejemplo))
+*/
 // MD LINKS STATUS CODE     *************************************************************
 let docsLinkStatusOk;
 let docsLinkStatusFail; 
@@ -344,6 +389,7 @@ module.exports = {
     converMdToHtml,
     pathReadMd,
     readmdLinks,
+    statsArrayStatus,
     readmdLinkStatus,
     statsArrayGlobal,
     readDocuments,
