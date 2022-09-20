@@ -94,33 +94,21 @@ const mdLinks = (route,elements) => {
 
             else if (mainFunctions.existRoute(route)){
                 let folder=mainFunctions.pathRead(route);
-                console.log(folder)
-                // let xx = folder.map((item)=>{return(mainFunctions.linksGlobal)})
-                // console.log(xx)
-                //console.log(xxx)
-                    // .then(data => { 
-                    //     Promise.all(data
-                    //     return(mainFunctions.readmdLinkStatus(data))
-                    //     .then((data)=> {res(data)})
-                    //     .catch((error)=> {rej(error)})
-                        
-                        
-
-                    // })
-                    // .catch(error=>{ rej(error) })  
-                    // .then(data => { 
-                    //     res((data))
-                    // })
-                    // .catch(error=>{ rej(error) }) 
-                //}
-                //let datos=mainFunctions.linksGlobal
-                //console.log(datos)
-                
-                //res(mainFunctions.docsLinkStatusOk)  
-                // let newLinksStatus=mainFunctions.docsLinkStatusOk.concat(mainFunctions.docsLinkStatusFail)
-                // res(mainFunctions.docsLinkStatusOk)   
-                    
-
+                mainFunctions.readDocumentsArr(folder)
+                .then(data =>{
+                    return data.map((item)=>{
+                        return mainFunctions.converMdToHtml(item)
+                    })
+                })
+                .catch(error=>{ rej(error) })  
+                .then(data =>{
+                    return(mainFunctions.readmdLinkStatus(...new Set(data)))
+                    })
+                .catch(rej('La carpeta no contiene files ".md"..'))      
+                .then(data =>{
+                        res(data)
+                    })
+                .catch(error=>{ rej(error) })  
             } else {
                 res('La ruta no existe..')
             }

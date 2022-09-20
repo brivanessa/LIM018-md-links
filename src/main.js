@@ -104,19 +104,6 @@ const readmdLinks=(document) => {
 /******** PROBANDO eadmdLinks 
 console.log(readmdLinks('../readmeExample.md'));
 */
-// PARA LOS LINKS
-
-
-
-
-
-
-
-
-
-
-
-
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
 let linksGlobal=[];
 let leerDocs=[]
@@ -124,7 +111,7 @@ let leerDocs=[]
 const readDocuments = (document) => { 
     return fs.promises.readFile(document,'utf-8')
     .then(data => { 
-        leerDocs.push([document,data])
+        //leerDocs.push([document,data])
         return([document,data])
     }) 
     .catch(error=>{
@@ -137,14 +124,15 @@ const readDocumentsArr = (documentArr) => {
         documentArr.map((document)=>{
                 return readDocuments(document)
                 .then(data => { 
-                    return data})
+                    return data
+                })
                 .catch(error=>{
-                    return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+                    return error
                 }) 
             })
     )              
 }
-
+/*
 let arrrayEjemplo= [
     '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md',
     '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/aeadmExample.md',
@@ -162,11 +150,16 @@ readDocumentsArr(arrrayEjemplo)
     })
 })
 .then(data =>{
-    console.log(data[0])
-    return(data[0])
+    //console.log(readmdLinkStatus(data[0]))
+    //return(readmdLinkStatus(data[0]))
+    return(readmdLinkStatus(...new Set(data)))
     })
 
-
+.then(data =>{
+        console.log(data)
+        return(data)
+    })
+ */   
 /*---------------------- PASO 2: convertir Md a HTML       YES TEST **************/
 const converMdToHtml = (documentHtml) => {
         if(documentHtml!=''){
@@ -355,6 +348,7 @@ module.exports = {
     statsArrayGlobal,
     readDocuments,
     statsArray,
+    readDocumentsArr,
     linksGlobal,
     doclistLinks,
     statLinks,
