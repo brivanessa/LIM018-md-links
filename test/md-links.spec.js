@@ -72,22 +72,15 @@ describe('pathReadFolders', () => {
 });
 
 describe('pathRead', () => {
-    test(' pathRead', async() => {
-      return pathRead('folderFiles0').catch(error=>{
-        expect(error).toBe('no hay archivos en la carpeta');
-      });
+    it('"pathRead" should return error1',() => {
+        expect(pathRead('folderFiles0')).toBe('no hay archivos en la carpeta');
     });
-    test(' pathRead', async() => {
-      return pathRead('folderFiles0234').catch(error=>{
-        expect(error).toBe('la carpeta o ruta no existen');
+    it('"pathRead" should return error2',() => {
+        expect(pathRead('folderFiles0234')).toBe('la carpeta o ruta no existen');
       });
-    });
-
-    test(' pathRead', async() => {
-      return pathRead('carpetaTest').then(data=>{
-        expect(data).toHaveLength(4);
+    it('"pathRead" should return all files .md',() => {
+        expect(pathRead('carpetaTest')).toHaveLength(4);
       });
-    });
 });
 
 describe(' pathReadMd', () => {
@@ -101,17 +94,14 @@ describe(' pathReadMd', () => {
 
 
 describe(' pathReadFile', () => {
-  test(' pathReadFile', async() => {
-    return pathReadFile('readmeExample.md').then(data=>{
-      expect(data).toBe(fileRoute);
-    })
+  it('function "pathReadFile" should return route of file ".md" normalize and absolute', () => {
+      expect(pathReadFile('readmeExample.md')).toBe(fileRoute);
   });
-  test(' pathReadFile', async() => {
-    return pathReadFile('thumb.png').catch(error=>{
-      expect(error).toBe('no es un archivo .md...');
-    });
+  it('function "pathReadFile" will be error if the file is not ".md"', () => {
+      expect(pathReadFile('thumb.png')).toBe('no es un archivo .md...');
   });
 });
+
 /// cambiar sync ------
 describe('readmdLinks', () => {
   test('readmdLinks', async() => {
@@ -129,16 +119,11 @@ describe('readmdLinks', () => {
 //*******
 
 describe('converMdToHtml', () => {
-  test('converMdToHtml', async() => {
-    return converMdToHtml('').catch(error=>{
-      expect(error).toBe('no hay links...');
-    });
+  it('function "converMdToHtml" will be error if the file has not links', () => {
+      expect( converMdToHtml('')).toBe('no hay links...');
   });
-
-  test('converMdToHtml', async() => {
-    return converMdToHtml(`[Node.js](http://nodejs.og/)`).then(data=>{
-      expect(data).toHaveLength(1);
-    });
+  it('function "converMdToHtml" array that contain all links with their document and text', () => {
+      expect(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)'])).toEqual([ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ])
   });
 });
 
@@ -151,17 +136,17 @@ describe('readDocuments', () => {
 
   test('readDocuments', async() => {
     return readDocuments('readmeExample.md').then(data=>{
-      expect(data).toContain('es un lenguaje de marcado');
+      expect(data[1]).toContain('es un lenguaje de marcado');
     });
   });
 });
 
-describe('statslinksGlobal', () => {
-  it('function "statslinksGlobal" should return files that are ".md"', () => {
-    expect( statsArrayGlobal(['link1','link2','link2'])).toEqual({ Total: '3', Unique: '2' })
+describe('statsArrayGlobal', () => {
+  it('function "statsArrayGlobal" should return files that are ".md"', () => {
+    expect( statsArrayGlobal([['a','b','link1'],['c','d','link2'],['e','f','link2']])).toEqual({ Total: '3', Unique: '2' })
   });
-  it('function "statslinksGlobal" should return erro3 if the array has not ".md" files', () => {
-    expect( statsArrayGlobal('link1')).toBe('...no se puede analizar')
+  it('function "statsArrayGlobal" should return erro3 if the array has not ".md" files', () => {
+    expect( statsArrayGlobal(18)).toBe('...no se puede analizar')
   });
 });
 //-----
