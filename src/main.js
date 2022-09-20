@@ -62,23 +62,23 @@ const  pathRead = (ruta) => {
             return(docslist);
         } 
     }
+/******** PROBANDO pathRead
 //console.log(pathRead('../carpeta'))
 //console.log(pathRead('../folderFiles0'))
 //console.log(pathRead('../folderFilesNoMd'))
 //console.log(pathRead('../folderTestOneFileMd'))
-
+*/
 // LEER ARCHIVOS ARCHIVOS MD           YES TEST*******************************
 const pathReadFile = (ruta)=> { 
- //   return new Promise((res,rej) => {
         if(path.extname(ruta)==='.md'){
             docslist.push(pathGlobal(ruta))
             return(pathGlobal(ruta))
         } else {return('no es un archivo .md...')}  
-   // })
 }
-//console.log(pathReadFile('../readmeExample.md'))
+/******** PROBANDO pathReadFile 
+console.log(pathReadFile('../readmeExample.md'))
 //console.log(pathReadFile('../thumb.png'))
-
+*/
 // MD LINKS LISTA DE LINKS ***YES TEST (CAMBIAR fs.Sync)***********************
 let doclistLinks=[];
 const readmdLinks=(document) => {
@@ -101,54 +101,61 @@ const readmdLinks=(document) => {
         }
     })
 }
-//console.log(readmdLinks('readmeExample.md'));
+/******** PROBANDO eadmdLinks 
+console.log(readmdLinks('../readmeExample.md'));
+*/
 
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
 let linksGlobal=[];
-/*                  PASO 1: convertir Md a HTML       YES TEST **************/
+/*---------------------- PASO 1: LEER .MD            YES TEST **************/
+const readDocuments = (document) => { 
+    return fs.promises.readFile(document,'utf-8')
+    .then(data => { 
+        return([document,data])
+    }) 
+    .catch(error=>{
+        return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+    })
+}
+/*---------------------- PASO 2: convertir Md a HTML       YES TEST **************/
 const converMdToHtml = (documentHtml) => {
-    //return new Promise((res,rej)=> {
         if(documentHtml!=''){
-            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml}**.`));
+            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml[1]}**.`));
             mdToHtml('a').each( function(indice,elemento){
-                return linksGlobal.push(elemento.attributes[0].value)   
+                return linksGlobal.push([documentHtml[0],elemento.children[0].nodeValue,elemento.attributes[0].value])  
             })
-            //console.log(linksGlobal)
             return(linksGlobal)
         } else {return('no hay links...')}
-    //})
 }
-//console.log(converMdToHtml(`[Node.js](http://nodejs.og/)`))
-/*                  PASO 2: LEER .MD               YES TEST **************/
-const readDocuments = (document) => { 
-    // return new Promise((res,rej)=>{
-        return fs.promises.readFile(document,'utf-8')
-        .then(data => { 
-            return([document,data])
-            //return((data))
-        }) 
-        .catch(error=>{
-            return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-            //return(((error.code)=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-        })
-    // })  
-}
-/*                  PASO3: STATS DE LINKS              YES TEST **************/
+/******** PROBANDO converMdToHtml 
+console.log(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)']))
+////result:[ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ]
+*/
+/*---------------------- PASO3: STATS DE LINKS              YES TEST **************/
 let statLinks;
 const statsArrayGlobal= (arrayLinks) => {
-    if(typeof(arrayLinks)=='object'){
+    let arrayOnlyLinks=arrayLinks.map((link)=>{return(link[2])})
+    if(typeof(arrayOnlyLinks)=='object'){
         statLinks= 
-            { 'Total': `${arrayLinks.length}`,
-            'Unique': `${[...new Set(arrayLinks)].length}`}
+            { 'Total': `${arrayOnlyLinks.length}`,
+            'Unique': `${[...new Set(arrayOnlyLinks)].length}`}
         return(statLinks)    
     }
     else{return('...no se puede analizar')}
 }
 
-/******** GLOBAL
-//readDocuments('../readmeAllOkLinks.md')
+/******** PROBANDO statsArrayGlobal 
+console.log(statsArrayGlobal([[ '../readmeAllOkLinks.md', 'N.js', 'https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAllOnks.md', 'No.js','https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAs.md', 'Nod.js','https://www.kualo.co.uk/404']]))
+////result: { Total: '3', Unique: '2' }
+*/
+
+/* PROBANDO statsArrayGlobal CUANDO NOS DAN ARCHIVO .MD
+//------------------------------------------------------
+readDocuments('../readmeAllOkLinks.md')
 //readDocuments('../readmeVaciodd.txt')
-readDocuments('')
+//readDocuments('')
 //readDocuments('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md')
         .then(data => { 
             let linksDelMd=converMdToHtml(data)
@@ -158,198 +165,95 @@ readDocuments('')
         .catch(error=>{ return error })    
 
 */
-// MD LINKS STATUS CODE     *************************************************************
-//          Status *************************+
 
+// MD LINKS STATUS CODE     *************************************************************
 let docsLinkStatusOk;
 let docsLinkStatusFail; 
-let linksExamples= [
-    'https://es.wikipedia.org/wiki/Markdown',
-    'https://es.wikipedia.org/wiki/Markdown',
-    'https://www.kualo.co.uk/404',
-    'https://www.kualo.co.uk/404',
-    'http://nodejs.org/',
-    'https://blueg.co.uk/404'
-    ]
-const readmdLinkdeMd = (document) => {
-    return readDocuments(document)
-        .then(data => { 
-            //console.log(data)
-            if(data!=''){
-
-                let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data[1]}**.`));
-                mdToHtml('a').each( function(indice,elemento){
-                    linksGlobal.push([data[0],elemento.children[0].nodeValue,elemento.attributes[0].value]) 
-                    //console.log(linksGlobal)
-                    return linksGlobal  
-                    //console.log(linksGlobal)
-                })
-                return Promise.all(linksGlobal.map((link)=>{
-                    //console.log(link[1])
-                    return axios.get(link[2])
-                    .then( (response)=>{
-                        docsLinkStatusOk=({
-                            //'text': `${elemento.children[0].nodeValue}`,
-                            'file': `${link[0]}`,
-                            'text': `${link[1]}`,
-                            'href': `${link[2]}`,
-                            'status': `${response.status}`,
-                            'result':  `${response.statusText}`,  
-                        })
-                        return (docsLinkStatusOk)
-                    })
-                    .catch((error) => {
-                       if (error.response) {
-                           docsLinkStatusFail=({
-                                'file': `${link[0]}`,
-                                'text': `${link[1]}`,
-                                'href': `${link[2]}`,
-                                'status': `${error.response.status}`,
-                                'result':  `FAIL`,
-                            })
-                            return (docsLinkStatusFail)
-                        } else if (error.request) {
-                            docsLinkStatusFail=({
-                                'file': `${link[0]}`,
-                                'text': `${link[1]}`,
-                                'href': `${link[2]}`,
-                                'status': `${error.request.status}: no se recibió respuesta`,
-                                'result':  `FAIL`,
-                            })
-                            return(docsLinkStatusFail)
-                        } else {
-                            docsLinkStatusFail=({
-                                'file': `${link[0]}`,
-                                'text': `${link[1]}`,
-                                'href': `${link[2]}`,
-                                'status': `${error.message}`,
-                                'result':  `FAIL`,
-                            })
-                            return(docsLinkStatusFail)
-                        } 
-                    }); 
-                }))
-
-            } else {return('no hay links...')}   
-        })
-        .catch(error=>{ return error }) 
-    }
-/*
-const readmdLinkStatus = (links) => {
-        return Promise.all(links.map((link)=>{
-            return axios.get(link)
+const readmdLinkStatus = (linksGlobal) => {
+    return Promise.all(linksGlobal.map((link)=>{
+        return axios.get(link[2])
             .then( (response)=>{
                 docsLinkStatusOk=({
-                    'href': `${link}`,
-                    'status': `${response.status}`,
-                    'result':  `${response.statusText}`,  
+                'file': `${link[0]}`,
+                'text': `${link[1]}`,
+                'href': `${link[2]}`,
+                'status': `${response.status}`,
+                'result':  `${response.statusText}`,  
                 })
                 return (docsLinkStatusOk)
             })
             .catch((error) => {
-               if (error.response) {
-                   docsLinkStatusFail=({
-                        'href': `${link}`,
+                if (error.response) {
+                    docsLinkStatusFail=({
+                        'file': `${link[0]}`,
+                        'text': `${link[1]}`,
+                         'href': `${link[2]}`,
                         'status': `${error.response.status}`,
                         'result':  `FAIL`,
                     })
                     return (docsLinkStatusFail)
                 } else if (error.request) {
                     docsLinkStatusFail=({
-                        'href': `${link}`,
+                        'file': `${link[0]}`,
+                        'text': `${link[1]}`,
+                        'href': `${link[2]}`,
                         'status': `${error.request.status}: no se recibió respuesta`,
                         'result':  `FAIL`,
                     })
                     return(docsLinkStatusFail)
                 } else {
                     docsLinkStatusFail=({
-                        'href': `${link}`,
+                        'file': `${link[0]}`,
+                        'text': `${link[1]}`,
+                        'href': `${link[2]}`,
                         'status': `${error.message}`,
                         'result':  `FAIL`,
                     })
                     return(docsLinkStatusFail)
                 } 
             }); 
-        }))
+    }))
 } 
-*/
 
-//readmdLinkStatus('../readmeAllOkLinks.md')
-//readmdLinkStatus('../readmeVaciodd.txt')
-//readmdLinkStatus('')
-//console.log(readmdLinkdeMd('../readmeExample.md'))
+/******** PROBANDO readmdLinkStatus 
+let linksExamples= [
+    [ '../readmeAllOkLinks.md', 'N.js', 'https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAllOnks.md', 'No.js','https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAs.md', 'Nod.js','https://www.kualo.co.uk/404'],
+    [ '../readmeAllOkLinkd', 'Node.js','https://www.kualo.co.uk/404'],
+    [ '../readmeAllOkLinkmd', 'Nodes.js','http://nodejs.org/'],
+    [ '../readmeAllmd', 'Nodesp.js','https://blueg.co.uk/404'],
+    ]
+readmdLinkStatus(linksExamples)  
+.then((data) => {
+    console.log(data)
+    return data
+})
+.catch((error) => {
+    console.log(error)
+    return error
+})
+*/ 
 
-//console.log(readmdLinkStatus('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md'))
+/* PROBANDO readmdLinkStatus CUANDO NOS DAN ARCHIVO .MD
+//------------------------------------------------------
+const readmdLinkdeMd = (document) => {
+    return readDocuments(document)
+        .then(data => { 
+            return converMdToHtml(data)
+        })
+        .catch(error=>{ return error }) 
+        .then(data => { 
+            return readmdLinkStatus(data)
+        })
+        .catch(error=>{ return error })    
+    }
+
+//readmdLinkdeMd('../readmeAllOkLinks.md')
+//readmdLinkdeMd('../readmeVaciodd.txt')
+//readmdLinkdeMd('')
+//readmdLinkdeMd('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md')
 readmdLinkdeMd('../readmeExample.md')
-    .then(data=>{
-        console.log(data)
-       //console.log(docsLinkStatusOk)
-        ////return(data)   
-    })
-    .catch(error=>{
-       console.log(error)
-       //console.log(docsLinkStatusFail)
-       //// return(error)
-    })
-
-// const readmdLinkStatus = (link) => {
-//     //return new Promise ((res,rej)=> {
-//             return axios.get(link)
-//             .then( (response)=>{
-//                 docsLinkStatusOk=({
-//                     'href': `${link}`,
-//                     'status': `${response.status}`,
-//                     'result':  `${response.statusText}`,  
-//                 })
-//                 //console.log(docsLinkStatusOk)
-//                 return (docsLinkStatusOk)
-//             })
-//             .catch((error) => {
-//                if (error.response) {
-//                    docsLinkStatusFail=({
-//                         'href': `${link}`,
-//                         'status': `${error.response.status}`,
-//                         'result':  `FAIL`,
-//                     })
-//                     // console.log(docsLinkStatusFail)
-//                     return (docsLinkStatusFail)
-//                 } else if (error.request) {
-//                     docsLinkStatusFail=({
-//                         'href': `${link}`,
-//                         'status': `${error.request.status}: no se recibió respuesta`,
-//                         'result':  `FAIL`,
-//                     })
-//                     // console.log(docsLinkStatusFail)
-//                     return(docsLinkStatusFail)
-//                 } else {
-//                     docsLinkStatusFail=({
-//                         'href': `${link}`,
-//                         'status': `${error.message}`,
-//                         'result':  `FAIL`,
-//                     })
-//                     //console.log(docsLinkStatusFail)
-//                     return(docsLinkStatusFail)
-//                 } 
-//                     //console.log(docsLinkStatusFail)
-
-//             }); 
-//      //})
-// }    
-
-
-
-//let linksExamples=['https://es.wikipedia.org/wiki/Markdown'];
-// let linksExamples= [
-//   'https://es.wikipedia.org/wiki/Markdown',
-//   'https://es.wikipedia.org/wiki/Markdown',
-//   'https://www.kualo.co.uk/404',
-//   'https://www.kualo.co.uk/404',
-//   'http://nodejs.org/',
-//   'https://blueg.co.uk/404'
-//   ]
-
-/* LINKS UNO POR UNO *******************************************
-readmdLinkStatus(linksExamples)
     .then(data=>{
         console.log(data)
        //console.log(docsLinkStatusOk)
@@ -362,31 +266,6 @@ readmdLinkStatus(linksExamples)
     })
 //*/
 
-//********MDLINKS
-
-/* ////USANDO PRIMISE ALL
-const allLinks =(links)=>{
-    return Promise.all(
-     links.map((link)=>{
-         console.log(link)
-         return readmdLinkStatus(link)})
-    ) 
- } 
-allLinks(linksExamples)
-.then(data=>{
-    console.log(data)
-   //console.log(docsLinkStatusOk)
-   //// return(data)   
-})
-.catch(error=>{
-    console.log(error)
-   //console.log(docsLinkStatusFail)
-   //// return(error)
-})
-*/
-
-
-
 module.exports = {
     //mdLinks,
     existRoute,
@@ -397,7 +276,7 @@ module.exports = {
     converMdToHtml,
     pathReadMd,
     readmdLinks,
-    //readmdLinkStatus,
+    readmdLinkStatus,
     statsArrayGlobal,
     readDocuments,
     doclistLinks,
