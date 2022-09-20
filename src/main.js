@@ -134,8 +134,8 @@ console.log(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og
 /*---------------------- PASO3: STATS DE LINKS              YES TEST **************/
 let statLinks;
 const statsArrayGlobal= (arrayLinks) => {
-    let arrayOnlyLinks=arrayLinks.map((link)=>{return(link[2])})
-    if(typeof(arrayOnlyLinks)=='object'){
+    if(typeof(arrayLinks)=='object'){
+        let arrayOnlyLinks=arrayLinks.map((link)=>{return(link[2])})    
         statLinks= 
             { 'Total': `${arrayOnlyLinks.length}`,
             'Unique': `${[...new Set(arrayOnlyLinks)].length}`}
