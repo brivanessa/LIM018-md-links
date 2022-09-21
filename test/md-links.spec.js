@@ -35,14 +35,21 @@ const arrrayEjemplo= [
   '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/fs/ffs/readmeExample.md'
 ]
 
-const linksExamples= [
-  [ 'a', '1', 'https://abc'],
-  [ 'c', '5','http://def'],
-  ]
-const linksExamplesResult= [
-  {file:'a',text:'1',href:'https://abc',status:'200',result:'OK'},
-  {file:'c',text:'5',href:'http://def',status:'200',result:'OK'},
-    ]
+const links= [[ 'a', '1', 'https://abc'],[ 'c', '5','http://def']]
+const linksAxiosOk= [
+  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'200',result:'OK'},
+  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'200',result:'OK'}]
+  const linksAxiosFail1= [
+    {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'400',result:'FAIL'},
+    {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'400',result:'FAIL'}]  
+const linksAxiosFail2= [
+  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'undefined: no se recibió respuesta',result:'FAIL'},
+  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'undefined: no se recibió respuesta',result:'FAIL'}]
+const linksAxiosFail3= [
+  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'ERROR',result:'FAIL'},
+  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'ERROR',result:'FAIL'}]
+    
+  
 
 describe('existRoute', () => {
   it('Route "readmeExample.md" should return TRUE', () => {
@@ -130,7 +137,7 @@ describe('converMdToHtml', () => {
 
 describe('readDocuments', () => {
   test('readDocuments', async() => {
-    return readDocuments('readmeVaci.md').catch(error=>{
+    return readDocuments('./readmeVacio.md').catch(error=>{
       expect(error).toBe('ENOENT: el archivo no existe');
     });
   });
@@ -179,56 +186,35 @@ describe('statsArrayGlobal', () => {
 });
 //-----
 
-describe('fEventRegister funciona correctamente', () => {
-  
-  it('debería aparecer error cuando los datos son vacios', (done) => {
-    //axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
-    axios.get.mockImplementation(() => Promise.resolve({status:'200', statusText:'OK'}));
-    let docsLinkStatusOk;
-   setTimeout(() => {
-      expect(readmdLinkStatus(linksExamples)).toEqual(linksExamplesResult);
-   done();
+  describe('readmdLinkStatus', () => {
+    beforeEach(() => axios.get.mockClear())
+    test('readmdLinkStatus OK', async() => {
+      axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
+      return readmdLinkStatus(links).then(data=>{
+        expect(data).toEqual(linksAxiosOk);
+      });
+    });
+
+    test('readmdLinkStatus ERROR 400', async() => {
+      axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
+      return readmdLinkStatus(links).then(data=>{
+        expect(data).toEqual(linksAxiosFail1);
+      });
+    });
+
+    test('readmdLinkStatus ERROR.request', async() => {
+      axios.get.mockImplementation(()=>Promise.reject({request:{status:'undefined'}}));
+      return readmdLinkStatus(links).then(data=>{
+        expect(data).toEqual(linksAxiosFail2);
+      });
+    });
+
+    test('readmdLinkStatus ERROR.request', async() => {
+      axios.get.mockImplementation(()=>Promise.reject({message:'ERROR'}));
+      return readmdLinkStatus(links).then(data=>{
+        expect(data).toEqual(linksAxiosFail3);
+      });
+    });
   });
-  });
 
-  // it('debería aparecer error cuando hay un email en uso', (done) => {
-  //   createUserWithEmailAndPassword.mockRejectedValue({ code: 'auth/email-already-in-use' });
-  //   fEventRegister();
-  //   const btnRegister = document.getElementById('register-button');
-  //   btnRegister.click();
-  //   setTimeout(() => {
-  //     expect(document.querySelector('.register-error').innerHTML).toBe('Email en uso, intenta iniciar sesión.');
-  //     done();
-  //   });
-  // });
 
-  // it('debería aparecer error', (done) => {
-  //   createUserWithEmailAndPassword.mockRejectedValue({ code: 'xxxx' });
-  //   fEventRegister();
-  //   const btnRegister = document.getElementById('register-button');
-  //   btnRegister.click();
-  //   setTimeout(() => {
-  //     expect(document.querySelector('.register-error').innerHTML).toBe('Vuelve a intentarlo.');
-  //     done();
-  //   });
-  // });
-});
-
-// describe('readmdLinkStatus', () => {
-//   test('readmdLinkStatus', async() => {
-//     return readmdLinkStatus(linksExamples).catch(error=>{
-
-//       expect(error.response).toBe('404');
-//     });
-//   });
-// test('readmdLinkStatus', async() => {
-//     return readmdLinkStatus(linksExamples).catch(error=>{
-//       expect(error.request).toBe('undefined: no se recibió respuesta');
-//     });
-//   });
-//   test('readmdLinkStatus', async() => {
-//     return readmdLinkStatus(linksExamples).then(data=>{
-//       expect(response).toBe('200');
-//     });
-//   });
-// });

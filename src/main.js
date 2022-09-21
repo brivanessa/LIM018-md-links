@@ -99,6 +99,9 @@ const readDocuments = (document) => {
         return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
     })
 }
+
+console.log(readDocuments('README.md'))
+
 /*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
 const readDocumentsArr = (documentArr) => { 
     return Promise.all(
@@ -208,12 +211,8 @@ const readmdLinkStatus = (linksGlobal) => {
 }  
 /******** PROBANDO readmdLinkStatus 
 let linksExamples= [
-    [ '../readmeAllOkLinks.md', 'N.js', 'https://es.wikipedia.org/wiki/Markdown'],
-    [ '../readmeAllOnks.md', 'No.js','https://es.wikipedia.org/wiki/Markdown'],
-    [ '../readmeAs.md', 'Nod.js','https://www.kualo.co.uk/404'],
-    [ '../readmeAllOkLinkd', 'Node.js','https://www.kualo.co.uk/404'],
-    [ '../readmeAllOkLinkmd', 'Nodes.js','http://nodejs.org/'],
-    [ '../readmeAllmd', 'Nodesp.js','https://blueg.co.uk/404'],
+    [ 'a', '1', 'https://es.wikipedia.org/wiki/Markdown'],
+    [ 'a', '2','https://es.wiki.org/wiki/Markdown'],
     ]
 readmdLinkStatus(linksExamples)  
 .then((data) => {
