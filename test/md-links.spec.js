@@ -10,9 +10,13 @@ const {
   readmdLinks,
   readDocuments,
   readmdLinkStatus,
+  readDocumentsArr,
   statsArrayGlobal,
+  statsArray,
+  statsArrayStatus
 } = require('../src/main.js')
-jest.setTimeout(20000)
+
+
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 
@@ -22,6 +26,12 @@ const readmeExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/
 const folderArray = [carpeta1, carpeta2, readmeExample]
 const folderArray2 = [carpeta1, carpeta2]
 const folderArray3 = [readmeExample]
+const arrrayEjemplo= [
+  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md',
+  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/aeadmExample.md',
+  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/readmeExample2.md',
+  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/fs/ffs/readmeExample.md'
+]
 
 describe('existRoute', () => {
   it('Route "readmeExample.md" should return TRUE', () => {
@@ -121,11 +131,38 @@ describe('readDocuments', () => {
   });
 });
 
+
+describe('readDocumentsArr', () => {
+  test('readDocumentsArr', async() => {
+    return readDocumentsArr(arrrayEjemplo).then(data=>{
+      expect(data).toHaveLength(4);
+    });
+  });
+});
+
+describe('statsArrayStatus', () => {
+  it('function "statsArrayStatus" should return links with details', () => {
+    expect( statsArrayStatus([{file:'a',text:'b',href:'c',status:'e',result:'OK'},{file:'a',text:'b',href:'d',status:'e',result:'FAIL'},{file:'b',text:'b',href:'d',status:'e',result:'FAIL'}])).toEqual({Files:'2' ,Total:'3',Ok:'1',Broquen:'2',Unique:'2',UniqueOk:'1',UniqueBroquen:'1'})
+  });
+  it('function "statsArrayStatus" should return erro3 if the array has not links', () => {
+    expect( statsArrayStatus([])).toBe('No hay links por analizar...')
+  });
+});
+
+describe('statsArray', () => {
+  it('function "statsArray" should return number of total and unique links WHEN there is a file ".md"', () => {
+    expect( statsArray(['link1','link2','link2'])).toEqual({ Total: '3', Unique: '2' })
+  });
+  it('function "statsArray" should return error if the array has not links WHEN there is a file ".md"', () => {
+    expect( statsArray(18)).toBe('...no se puede analizar')
+  });
+});
+
 describe('statsArrayGlobal', () => {
-  it('function "statsArrayGlobal" should return files that are ".md"', () => {
+  it('function "statsArrayGlobal" should return number of total and unique links WHEN there are diferents files ".md"', () => {
     expect( statsArrayGlobal([['a','b','link1'],['c','d','link2'],['e','f','link2']])).toEqual({ Total: '3', Unique: '2' })
   });
-  it('function "statsArrayGlobal" should return erro3 if the array has not ".md" files', () => {
+  it('function "statsArrayGlobal" should return error if the array has not links WHEN there are diferents files ".md"', () => {
     expect( statsArrayGlobal(18)).toBe('...no se puede analizar')
   });
 });
