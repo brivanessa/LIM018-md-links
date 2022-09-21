@@ -13,7 +13,7 @@ muchas veces están rotos o ya no son válidos y eso perjudica mucho el valor de
 la información que se quiere compartir.
 
 Dentro de una comunidad de código abierto, nos han propuesto crear una
-herramienta usando [Node.js](http://nodejs.og/), que lea y analice archivos
+herramienta usando [Node.js](http://nodejs.org/), que lea y analice archivos
 en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas. [PIXAR](https://www.lego.com/en-us/notfound)
   * [Arreglos](https://blueg.co.uk/404)

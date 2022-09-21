@@ -1,8 +1,8 @@
-# Markdown Links
+# Markdown Links 
 
 ## 1. [Preámbulo](https://es.wikipedia.org/wiki/Markdown)
-
-[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
+7
+[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado 
 ligero muy popular entre developers. Es usado en muchísimas plataformas que
 manejan texto plano (GitHub, foros, blogs, ...) y es muy común
 encontrar varios archivos en ese formato en cualquier tipo de repositorio

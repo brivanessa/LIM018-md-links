@@ -1,13 +1,3 @@
-// const mdLinks = require('../');
-
-
-// describe('mdLinks', () => {
-
-//   it('should...', () => {
-//     console.log('FIX ME!');
-//   });
-
-// });
 const {
   //mdLinks,
   existRoute,
@@ -25,23 +15,13 @@ const {
 jest.setTimeout(20000)
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
-const fileRouteTestExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderTestOneFileMd/fileTestExample.md';
-const folderTestOneFileMd ='/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderTestOneFileMd';
-//files de folder:carpeta1
-//const carpeta = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta'
+
 const carpeta1 = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1'
 const carpeta2 = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta2'
 const readmeExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md'
 const folderArray = [carpeta1, carpeta2, readmeExample]
 const folderArray2 = [carpeta1, carpeta2]
 const folderArray3 = [readmeExample]
-const readmeExampleLinks = [
-  'https://es.wikipedia.org/wiki/Markdown',
-  'https://es.wikipedia.org/wiki/Markdown',
-  'http://nodejs.og/',
-  'https://www.lego.com/en-us/notfound',
-  'https://blueg.co.uk/404'
-]
 
 describe('existRoute', () => {
   it('Route "readmeExample.md" should return TRUE', () => {
@@ -167,52 +147,3 @@ test('readmdLinkStatus', async() => {
     });
   });
 });
-
-// describe('readmdLinksGlobal', () => {
-//   test('readmdLinksGlobal', async() => {
-//     return readmdLinksGlobal('readmeVacio.md').catch(error=>{
-//       expect(error).toBe('undefined: el archivo esta vacio');
-//     });
-//   });
-
-//   test('readmdLinksGlobal', async() => {
-//     return readmdLinksGlobal('readmeExample.md').then(data=>{
-//       expect(data).toEqual(readmeExampleLinks);
-//     });
-//   });
-// });
-
-/*
-describe('readmdLinkStatus', () => {
-  test('readmdLinkStatus', async() => {
-    return readmdLinkStatus('readmeVacio.md').catch(error=>{
-      expect(error).toBe('el archivo esta vacio');
-    });
-  });
-
-  test('readmdLinkStatus', async(done) => {
-    return readmdLinkStatus('readmeExample.md').then(data=>{
-      setTimeout(()=>{
-        expect(data).toHaveLength(5)
-        done()
-      },1000)
-      //expect(data).toHaveLength(5);
-    });
-  });
-});
-
-
-describe('functionGlobalStats', () => {
-  test('functionGlobalStats', async() => {
-    return functionGlobalStats('readmeVacio.md').catch(error=>{
-      expect(error).toBe('el archivo esta vacio');
-    });
-  });
-
-  test('functionGlobalStats', async(done) => {
-    return functionGlobalStats('readmeExample.md').then(data=>{
-        expect(data).toEqual(2)
-    });
-  });
-});
-*/
