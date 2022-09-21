@@ -96,11 +96,16 @@ const readDocuments = (document) => {
     return fs.promises.readFile(document,'utf-8')
     .then(data  =>{ return([document,data])}) 
     .catch(error=>{
+        console.log(error.code)
         return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
     })
 }
+// readDocuments('')
+// //readDocuments('src')
 
-console.log(readDocuments('README.md'))
+// .then((data)=>console.log(data))
+// .catch((error)=>console.log(error))
+
 
 /*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
 const readDocumentsArr = (documentArr) => { 

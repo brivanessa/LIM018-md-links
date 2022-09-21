@@ -137,8 +137,13 @@ describe('converMdToHtml', () => {
 
 describe('readDocuments', () => {
   test('readDocuments', async() => {
-    return readDocuments('./readmeVacio.md').catch(error=>{
-      expect(error).toBe('ENOENT: el archivo no existe');
+    return readDocuments('').catch(error =>{
+      expect(error.code).toBe('ENOEdNT: el archivo no existe');
+    });
+  });
+  test('readDocuments', async() => {
+    return readDocuments('src').catch(error=>{
+      expect(error.code).toBe('EISDIR');
     });
   });
 
