@@ -221,17 +221,23 @@ readDocuments('../readmeAllOkLinks.md')
 /*---------------------- PASO3: STATS DE LINKS  CON STATUS            YES TEST **************/
 const statsArrayStatus= (arrayLinks) => {
     if(typeof(arrayLinks)=='object'&& arrayLinks.length>=1){
-        let links=arrayLinks.map((link)=>{return(link.href)})  
-        let files=arrayLinks.map((link)=>{return(link.file)})    
-        let linksOk=(arrayLinks.map((link)=>{return(link.result)})).filter((result)=>{return(result=='OK')})    
+        const links=arrayLinks.map((link)=>{return(link.href)})  
+        const files=arrayLinks.map((link)=>{return(link.file)})    
+        const linksOk=(arrayLinks.map((link)=>{return(link.result)})).filter((result)=>{return(result=='OK')})    
+        const linksNew=arrayLinks.map((link)=>{
+                const{file, text, status,...dataWithout} = link; // desestructuración para separar las propiedades del objeto que no vamos a usar
+                return dataWithout }) 
+        const linksUnique=new Set(linksNew.map(JSON.stringify)) // JSONstringify convierte el objeto en string para q así el new set pueda trabajar con los datos y sacar los que no se repitan 
+        const linksUniqueOk= Array.from(linksUnique).map(JSON.parse).filter((item)=>{return(item.result=='OK')})    //convertimos el objeto en un array y JSONparse los string en objetos
+        
         statLinks = { 
             'Files': `${[...new Set(files)].length}`,
             'Total': `${links.length}`,
             'Ok': `${linksOk.length}`,
             'Broquen': `${links.length-linksOk.length}`,
             'Unique': `${[...new Set(links)].length}`,
-            'UniqueOk': `${[...new Set(linksOk)].length}`,
-            'UniqueBroquen': `${[...new Set(links)].length-[...new Set(linksOk)].length}`,
+            'UniqueOk': `${linksUniqueOk.length}`,
+            'UniqueBroquen': `${[...new Set(links)].length-linksUniqueOk.length}`,
         }
         return(statLinks)    
     }
