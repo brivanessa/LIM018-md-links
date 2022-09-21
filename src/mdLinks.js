@@ -3,6 +3,7 @@ const colors = require('colors');
 const mainFunctions = require('./main.js')
 const path = require('path');
 // CREANDO PROMESAS => MDLINKS *************************************************************
+
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
         if (!!elements==false) {
@@ -43,7 +44,7 @@ const mdLinks = (route,elements) => {
                     .catch((error)=> {rej(error)})
                 }))
             } 
-        } else if (elements.stats==true) {
+        } else if (elements.stats==true && elements.validate==false) {
             console.log(`*******************************************************************`.yellow)
             console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{stats}'.bgYellow}) ----- mdLinks ` )
             console.log(`*******************************************************************`.yellow)
@@ -69,7 +70,7 @@ const mdLinks = (route,elements) => {
             } else {
                 res('La ruta no existe..')
             }
-        } else if  (elements.validate==true) {
+        } else if  (elements.validate) {
             console.log(`*******************************************************************`.yellow)
             console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
             console.log(`*******************************************************************`.yellow)
@@ -96,21 +97,22 @@ const mdLinks = (route,elements) => {
                         return mainFunctions.converMdToHtml(item)
                     })
                 })
-                .catch(error=>{ rej(error) })  
+                .catch(error=>{ return('error') })   
                 .then(data =>{
                     return(mainFunctions.readmdLinkStatus(...new Set(data)))
                     })
-                .catch(rej('La carpeta no contiene files ".md"..'))      
+                .catch(error=>{return(`${error}:La carpeta no contiene files '.md'..`)})      
                 .then(data =>{
+                        //console.log(data)
                         res(data)
                     })
                 .catch(error=>{ rej(error) })  
             } else {
                 res('La ruta no existe..')
             }
-        } else if  (elements.validate==true) {
+/*         } else if  ((elements.validate==true) && (elements.stats==true)) {
             console.log(`*******************************************************************`.yellow)
-            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
+            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${"{'validate':true, 'stats':true}".bgBlue}) ----- mdLinks ` )
             console.log(`*******************************************************************`.yellow)
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 return mainFunctions.readDocuments(route)
@@ -123,9 +125,13 @@ const mdLinks = (route,elements) => {
                 })
                 .catch(error=>{ rej(error) })  
                 .then(data => { 
-                    res((data))
+                    return(mainFunctions.statsArrayStatus(data))
                 })
                 .catch(error=>{ rej(error) })   
+                .then(data => { 
+                    res((data))
+                })
+                .catch(error=>{ rej(error) }) 
             }  
             else if (mainFunctions.existRoute(route)){
                 let folder=mainFunctions.pathRead(route);
@@ -141,12 +147,16 @@ const mdLinks = (route,elements) => {
                     })
                 .catch(rej('La carpeta no contiene files ".md"..'))      
                 .then(data =>{
-                        res(data)
+                    return(mainFunctions.statsArrayStatus(data))
                     })
                 .catch(error=>{ rej(error) })  
+                .then(data => { 
+                    res((data))
+                })
+                .catch(error=>{ rej(error) }) 
             } else {
                 res('La ruta no existe..')
-            }    
+            }     */
         } else {
             return('La ruta no existe..')
         }

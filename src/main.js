@@ -219,9 +219,8 @@ readDocuments('../readmeAllOkLinks.md')
 */
 
 /*---------------------- PASO3: STATS DE LINKS  CON STATUS            YES TEST **************/
-let statLinksStat;
 const statsArrayStatus= (arrayLinks) => {
-    if(typeof(arrayLinks)=='object'){
+    if(typeof(arrayLinks)=='object'&& arrayLinks.length>=1){
         let links=arrayLinks.map((link)=>{return(link.href)})  
         let files=arrayLinks.map((link)=>{return(link.file)})    
         let linksOk=(arrayLinks.map((link)=>{return(link.result)})).filter((result)=>{return(result=='OK')})    
@@ -236,7 +235,7 @@ const statsArrayStatus= (arrayLinks) => {
         }
         return(statLinks)    
     }
-    else{return('...no se puede analizar')}
+    else{return('No hay links por analizar...')}
 }
 /*
 let ejemplo =[
