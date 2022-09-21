@@ -126,9 +126,9 @@ const readDocumentsArr = (documentArr) => {
                 .then(data => { 
                     return data
                 })
-                .catch(error=>{
-                    return error
-                }) 
+                // .catch(error=>{  // ES NECESARIO?
+                //     return error
+                // }) 
             })
     )              
 }
@@ -183,7 +183,7 @@ const converMdToHtml = (documentHtml) => {
 console.log(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)']))
 ////result:[ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ]
 */
-/*---------------------- PASO3: STATS DE LINKS              YES TEST **************/
+/*---------------------- PASO3: STATS DE LINKS       DE DIFERENTES .MD    YES TEST **************/
 let statLinks;
 const statsArrayGlobal= (arrayLinks) => {
     if(typeof(arrayLinks)=='object'){
@@ -368,7 +368,7 @@ readmdLinkdeMd('../readmeExample.md')
     })
 //*/
 
-/*---------------------- PASO3: STATS DE LINKS       **************/
+/*---------------------- PASO3: STATS DE LINKS DE UN ARCHIVO MD      **************/
 let statLinksLast;
 const statsArray= (arrayLinks) => {
     if(typeof(arrayLinks)=='object'){
