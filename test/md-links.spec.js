@@ -1,3 +1,4 @@
+const axios = require('axios')
 const {
   //mdLinks,
   existRoute,
@@ -16,6 +17,7 @@ const {
   statsArrayStatus
 } = require('../src/main.js')
 
+jest.mock('axios')
 
 const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
 const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
