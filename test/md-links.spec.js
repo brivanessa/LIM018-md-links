@@ -35,6 +35,15 @@ const arrrayEjemplo= [
   '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/fs/ffs/readmeExample.md'
 ]
 
+const linksExamples= [
+  [ 'a', '1', 'https://abc'],
+  [ 'c', '5','http://def'],
+  ]
+const linksExamplesResult= [
+  {file:'a',text:'1',href:'https://abc',status:'200',result:'OK'},
+  {file:'c',text:'5',href:'http://def',status:'200',result:'OK'},
+    ]
+
 describe('existRoute', () => {
   it('Route "readmeExample.md" should return TRUE', () => {
     expect(existRoute('readmeExample.md')).toBe(true)
@@ -169,20 +178,57 @@ describe('statsArrayGlobal', () => {
   });
 });
 //-----
-describe('readmdLinkStatus', () => {
-  test('readmdLinkStatus', async() => {
-    return readmdLinkStatus('https://www.kualo.co.uk/404').catch(error=>{
-      expect(error.response).toBe('404');
-    });
+
+describe('fEventRegister funciona correctamente', () => {
+  
+  it('debería aparecer error cuando los datos son vacios', (done) => {
+    //axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
+    axios.get.mockImplementation(() => Promise.resolve({status:'200', statusText:'OK'}));
+    let docsLinkStatusOk;
+   setTimeout(() => {
+      expect(readmdLinkStatus(linksExamples)).toEqual(linksExamplesResult);
+   done();
   });
-test('readmdLinkStatus', async() => {
-    return readmdLinkStatus('http://nodejs.og/').catch(error=>{
-      expect(error.request).toBe('undefined: no se recibió respuesta');
-    });
   });
-  test('readmdLinkStatus', async() => {
-    return readmdLinkStatus('https://es.wikipedia.org/wiki/Markdown').then(data=>{
-      expect(response).toBe('200');
-    });
-  });
+
+  // it('debería aparecer error cuando hay un email en uso', (done) => {
+  //   createUserWithEmailAndPassword.mockRejectedValue({ code: 'auth/email-already-in-use' });
+  //   fEventRegister();
+  //   const btnRegister = document.getElementById('register-button');
+  //   btnRegister.click();
+  //   setTimeout(() => {
+  //     expect(document.querySelector('.register-error').innerHTML).toBe('Email en uso, intenta iniciar sesión.');
+  //     done();
+  //   });
+  // });
+
+  // it('debería aparecer error', (done) => {
+  //   createUserWithEmailAndPassword.mockRejectedValue({ code: 'xxxx' });
+  //   fEventRegister();
+  //   const btnRegister = document.getElementById('register-button');
+  //   btnRegister.click();
+  //   setTimeout(() => {
+  //     expect(document.querySelector('.register-error').innerHTML).toBe('Vuelve a intentarlo.');
+  //     done();
+  //   });
+  // });
 });
+
+// describe('readmdLinkStatus', () => {
+//   test('readmdLinkStatus', async() => {
+//     return readmdLinkStatus(linksExamples).catch(error=>{
+
+//       expect(error.response).toBe('404');
+//     });
+//   });
+// test('readmdLinkStatus', async() => {
+//     return readmdLinkStatus(linksExamples).catch(error=>{
+//       expect(error.request).toBe('undefined: no se recibió respuesta');
+//     });
+//   });
+//   test('readmdLinkStatus', async() => {
+//     return readmdLinkStatus(linksExamples).then(data=>{
+//       expect(response).toBe('200');
+//     });
+//   });
+// });

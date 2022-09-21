@@ -206,7 +206,25 @@ const readmdLinkStatus = (linksGlobal) => {
             }); 
     }))
 }  
-
+/******** PROBANDO readmdLinkStatus 
+let linksExamples= [
+    [ '../readmeAllOkLinks.md', 'N.js', 'https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAllOnks.md', 'No.js','https://es.wikipedia.org/wiki/Markdown'],
+    [ '../readmeAs.md', 'Nod.js','https://www.kualo.co.uk/404'],
+    [ '../readmeAllOkLinkd', 'Node.js','https://www.kualo.co.uk/404'],
+    [ '../readmeAllOkLinkmd', 'Nodes.js','http://nodejs.org/'],
+    [ '../readmeAllmd', 'Nodesp.js','https://blueg.co.uk/404'],
+    ]
+readmdLinkStatus(linksExamples)  
+.then((data) => {
+    console.log(data)
+    return data
+})
+.catch((error) => {
+    console.log(error)
+    return error
+})
+*/ 
 /*---------------------- PASO3: STATS DE LINKS DE UN ARCHIVO MD      **************/
 let statLinksLast;
 const statsArray= (arrayLinks) => {
