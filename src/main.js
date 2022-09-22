@@ -14,10 +14,10 @@ function pathGlobal(routaInput){
 }
 // LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *******************************
 let docslist=[];
-let error1 = 'no hay archivos en la carpeta'
-let error2 = 'la carpeta o ruta no existen'
-let error3 = 'no hay archivos .md en la carpeta'
-let error4 = 'no hay folders en la carpeta'
+const error1 = 'no hay archivos en la carpeta'
+const error2 = 'la carpeta o ruta no existen'
+const error3 = 'no hay archivos .md en la carpeta'
+const error4 = 'no hay folders en la carpeta'
 //          PASO 1: LISTA DE ARCHIVOS DE UN DIRECTORIO ************************
 function readFolder(ruta){
     let rutaAbsoluta = pathGlobal(ruta);
@@ -50,10 +50,10 @@ const  pathRead = (ruta) => {
             return(`${error2}`);
         // } else if (pathReadMd(readFolder(ruta))==error3){
         //     return(`${error3}`);
-        }else if ((readFolder(ruta)!=error1)||(readFolder(ruta)!=error2)){
-            let archivos = readFolder(ruta);
+        } else if ((readFolder(ruta)!=error1)||(readFolder(ruta)!=error2)){
+            const archivos = readFolder(ruta);
                 pathReadMd(archivos);
-            let folders = pathReadFolders(archivos);
+            const folders = pathReadFolders(archivos);
             if  (folders!=error4){
                 folders.map(doc=>{ return (pathRead(doc))})
             }
@@ -70,25 +70,23 @@ const pathReadFile = (ruta)=> {
 // MD LINKS LISTA DE LINKS ***YES TEST (CAMBIAR fs.Sync)***********************
 let doclistLinks=[];
 const readmdLinks=(document) => {
-    return new Promise ((res,rej)=>{
-        if (fs.readFileSync(document,'utf-8')===''){
-            rej('el archivo esta vacio')
-        } else {
-            let data = fs.readFileSync(document,'utf-8')
-            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
-            mdToHtml('a').each(function(indice, elemento){
-                doclistLinks.push({
-                  'link': `${indice+1}/${mdToHtml('a').length}`,
-                  'href': `${elemento.attributes[0].value}`,
-                  'text': `${elemento.children[0].nodeValue}`,
-                  'file': `${path.basename(document)}`,
-                  'route': `${pathGlobal(document)}`,
-                })
-                res(doclistLinks)
-             })
-        }
+    return fs.promises.readFile(document,'utf-8')
+    .then(data  =>{
+        let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
+        mdToHtml('a').each(function(indice, elemento){
+            doclistLinks.push({
+              'link': `${indice+1}/${mdToHtml('a').length}`,
+              'href': `${elemento.attributes[0].value}`,
+              'text': `${elemento.children[0].nodeValue}`,
+              'file': `${path.basename(document)}`,
+              'route': `${pathGlobal(document)}`,
+            })  
+        })
+        return(doclistLinks)
     })
+    .catch('el archivo esta vacio')
 }
+
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
 let linksGlobal=[];
 /*---------------------- PASO 1: LEER .MD            YES TEST **************/

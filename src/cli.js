@@ -1,4 +1,4 @@
-//const mdlinksFunction = require('./mdLinks.js');
+const mdlinksFunction = require('./mdLinks.js');
 
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md');
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md');
@@ -6,7 +6,7 @@
 //const mdLinks2 = mdlinksFunction.mdLinks('../thumb.png');
 
 //const mdLinks2 = mdlinksFunction.mdLinks('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta');
-//const mdLinks2 = mdlinksFunction.mdLinks("../carpeta");
+const mdLinks2 = mdlinksFunction.mdLinks("../carpeta");
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd');
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesNoMd');// revisar que me salga error
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFiles0'); // revisar
@@ -74,10 +74,10 @@
 // //console.log(elements)
 
 
-// mdLinks2.then((data)=>{
-//     console.log(data)
-// },(error)=>{
-//     console.log(`Error: ${error}`)
+mdLinks2.then((data)=>{
+    console.log(data)
+},(error)=>{
+    console.log(`Error: ${error}`)
 
-//     return (`Error: ${error}`)
-// })
+    return (`Error: ${error}`)
+})

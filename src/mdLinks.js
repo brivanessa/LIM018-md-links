@@ -6,31 +6,32 @@ const path = require('path');
 
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
-    if (!!elements==false) {
+        if ((!elements)||(elements.stats===false)||((elements.validate===false))) {
         // console.log(`***************************************************************`.yellow)
         // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
         // console.log(`***************************************************************`.yellow)       
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 const file = mainFunctions.pathReadFile(route);
                 return mainFunctions.readmdLinks(file)
+                        .then((data)=> {return(data)})
+                        .catch((error)=> {return(error)})
                         .then((data)=> {res(data)})
                         .catch((error)=> {rej(error)})
+
             }else if (mainFunctions.existRoute(route)){
                 const folder = mainFunctions.pathRead(route);
                 return Promise.all(
-                    folder.map((item)=>{
+                    folder.map((item)=>{ 
                         return mainFunctions.readmdLinks(item)
-                                .then((data)=> {
-                                    //console.log(data.length)
-                                    res(data)})
-                                .catch((error)=> {rej(error)})
-                    })
-                )
+                        .then((data)=> {return(data)})
+                        .catch((error)=> {return(error)})
+                    }))
+                .then(data=>{return (data[0])})
+                .then((data)=> {res(data)})
             } else {
                 return('La ruta no existe..')
             }    
-    } else 
-    if ((elements.validate) && (elements.stats)) {
+        } else if ((elements.validate) && (elements.stats)) {
             // console.log(`*******************************************************************`.yellow)
             // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${"{'validate':true, 'stats':true}".bgBlue}) ----- mdLinks ` )
             // console.log(`*******************************************************************`.yellow)
@@ -89,7 +90,7 @@ const mdLinks = (route,elements) => {
             } else {
                 res('La ruta no existe..')
             }
-        } else if  (elements.validate) {
+        } else if (elements.validate) {
             // console.log(`*******************************************************************`.yellow)
             // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
             // console.log(`*******************************************************************`.yellow)
@@ -119,31 +120,9 @@ const mdLinks = (route,elements) => {
                 res('La ruta no existe..')
             } 
                
-        } else {
-            // console.log(`***************************************************************`.yellow)
-            // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
-            // console.log(`***************************************************************`.yellow)       
-                if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
-                    const file = mainFunctions.pathReadFile(route);
-                    return mainFunctions.readmdLinks(file)
-                            .then((data)=> {res(data)})
-                            .catch((error)=> {rej(error)})
-                }else if (mainFunctions.existRoute(route)){
-                    const folder = mainFunctions.pathRead(route);
-                    return Promise.all(
-                        folder.map((item)=>{
-                            return mainFunctions.readmdLinks(item)
-                                    .then((data)=> {res(data)})
-                                    .catch((error)=> {rej(error)})
-                        })
-                    )
-                } else {
-                    return('La ruta no existe..')
-                }    
         } 
     })
 }
-
 
 module.exports = {
     mdLinks,
