@@ -6,7 +6,7 @@ const path = require('path');
 
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
-    if (!!elements==false) {
+    if (!elements) {
         // console.log(`***************************************************************`.yellow)
         // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
         // console.log(`***************************************************************`.yellow)       
@@ -61,7 +61,7 @@ const mdLinks = (route,elements) => {
             } else {
                 res('La ruta no existe..')
             }                
-        } else if (elements.stats) {
+    } else if (elements.stats) {
             // console.log(`*******************************************************************`.yellow)
             // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{stats}'.bgYellow}) ----- mdLinks ` )
             // console.log(`*******************************************************************`.yellow)
@@ -89,7 +89,7 @@ const mdLinks = (route,elements) => {
             } else {
                 res('La ruta no existe..')
             }
-        } else if  (elements.validate) {
+    } else if  (elements.validate) {
             // console.log(`*******************************************************************`.yellow)
             // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
             // console.log(`*******************************************************************`.yellow)
@@ -119,7 +119,7 @@ const mdLinks = (route,elements) => {
                 res('La ruta no existe..')
             } 
                
-        } else {
+    } else {
             // console.log(`***************************************************************`.yellow)
             // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
             // console.log(`***************************************************************`.yellow)       
@@ -140,9 +140,10 @@ const mdLinks = (route,elements) => {
                 } else {
                     return('La ruta no existe..')
                 }    
-        } 
+    } 
     })
 }
+//Caso 
 
 
 module.exports = {
