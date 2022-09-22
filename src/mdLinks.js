@@ -20,14 +20,17 @@ const mdLinks = (route,elements) => {
                 return Promise.all(
                     folder.map((item)=>{
                         return mainFunctions.readmdLinks(item)
-                                .then((data)=> {res(data)})
+                                .then((data)=> {
+                                    //console.log(data.length)
+                                    res(data)})
                                 .catch((error)=> {rej(error)})
                     })
                 )
             } else {
                 return('La ruta no existe..')
             }    
-    } else if ((elements.validate) && (elements.stats)) {
+    } else 
+    if ((elements.validate) && (elements.stats)) {
             // console.log(`*******************************************************************`.yellow)
             // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${"{'validate':true, 'stats':true}".bgBlue}) ----- mdLinks ` )
             // console.log(`*******************************************************************`.yellow)

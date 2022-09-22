@@ -38,6 +38,9 @@ describe('mdLinks (file) without options', () => {
 });
       //----------------------------//
 describe('mdLinks (folder) without options', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   test('mdLinks', async() => {                       //REVISAR
       return mdLinks(folderAbsoluteRoute).then(data=>{
         expect(data).toHaveLength(24);
@@ -78,6 +81,7 @@ describe('mdLinks (file) with validate:false option', () => {
 describe('mdLinks (folder) with validate:false option', () => {
 test('mdLinks', async() => {                       //REVISAR
     return mdLinks(folderAbsoluteRoute,{validate:false}).then(data=>{
+      //console.log(data)
       expect(data).toHaveLength(24);
     });
    });
@@ -96,7 +100,10 @@ test('mdLinks', async() => {
 
 // VALIDATE TRUE --------------------------------------------------
 describe('mdLinks (file) with validate:true option', () => {
-  beforeEach(() => axios.get.mockClear()) 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    axios.get.mockClear()
+  });
   test('mdLinks', async() => {
     axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
     return mdLinks(fileRoute,{validate:true}).then(data=>{
