@@ -1,225 +1,221 @@
 const axios = require('axios')
+
 const {
-  //mdLinks,
-  existRoute,
-  pathGlobal,
-  pathReadFile,
-  converMdToHtml,
-  pathReadMd,
-  pathReadFolders,
-  pathRead,
-  readmdLinks,
-  readDocuments,
-  readmdLinkStatus,
-  readDocumentsArr,
-  statsArrayGlobal,
-  statsArray,
-  statsArrayStatus
-} = require('../src/main.js')
+  mdLinks,
+} = require('../src/mdLinks')
 
 jest.mock('axios')
 
-const fileRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
-const fileRouteNormalize = '/Users///vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/readmeExample.md';
+const fileRoute = 'readmeAllOkLinks.md';
+const fileEmpty = 'readmeVacio.md'  
+const fileNoExists = 'readme.md'
+const fileNoMd = 'thumb.png'
 
-const carpeta1 = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1'
-const carpeta2 = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta2'
-const readmeExample = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md'
-const folderArray = [carpeta1, carpeta2, readmeExample]
-const folderArray2 = [carpeta1, carpeta2]
-const folderArray3 = [readmeExample]
-const arrrayEjemplo= [
-  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/readmeExample.md',
-  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/aeadmExample.md',
-  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/readmeExample2.md',
-  '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta/carpeta1/fs/ffs/readmeExample.md'
-]
+const folderAbsoluteRoute = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta'
+const folderOneFile = 'folderTestOneFileMd'
+const folderEmpty = 'folderFiles0'
+const folderNoMd = 'folderFilesNoMd'
 
-const links= [[ 'a', '1', 'https://abc'],[ 'c', '5','http://def']]
-const linksAxiosOk= [
-  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'200',result:'OK'},
-  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'200',result:'OK'}]
-  const linksAxiosFail1= [
-    {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'400',result:'FAIL'},
-    {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'400',result:'FAIL'}]  
-const linksAxiosFail2= [
-  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'undefined: no se recibió respuesta',result:'FAIL'},
-  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'undefined: no se recibió respuesta',result:'FAIL'}]
-const linksAxiosFail3= [
-  {file:`${links[0][0]}`,text:`${links[0][1]}`,href:`${links[0][2]}`,status:'ERROR',result:'FAIL'},
-  {file:`${links[1][0]}`,text:`${links[1][1]}`,href:`${links[1][2]}`,status:'ERROR',result:'FAIL'}]
-    
-  
-
-describe('existRoute', () => {
-  it('Route "readmeExample.md" should return TRUE', () => {
-    expect(existRoute('readmeExample.md')).toBe(true)
-  });
-  it('Route "readmeExamp.md" should return FALSE', () => {
-    expect(existRoute('readmeExamp.md')).toBe(false)
-  });
-});
-
-describe('pathGlobal', () => {
-  it('Relative route "readmeExample.md" should return absolute route', () => {
-    expect(pathGlobal('readmeExample.md')).toBe(fileRoute)
-  });
-  it('Route "readmeExample.md" should return absolute route', () => {
-    expect(pathGlobal(fileRouteNormalize)).toBe(fileRoute)
-  });
-});
-
-
-describe('pathReadFolders', () => {
-  it('Route "pathReadFolders" should return only folders', () => {
-    expect( pathReadFolders(folderArray)).toEqual(folderArray2)
-  });
-  it('Route "pathReadFolders" should return error4 if the array of folder dont have folders', () => {
-    expect( pathReadFolders(folderArray3)).toBe('no hay folders en la carpeta')
-  });
-});
-
-describe('pathRead', () => {
-    it('"pathRead" should return error1',() => {
-        expect(pathRead('folderFiles0')).toBe('no hay archivos en la carpeta');
+// NO OPTIONS --------------------------------------------------
+describe('mdLinks (file) without options', () => {
+    test('mdLinks', async() => {
+      return mdLinks(fileRoute).then(data=>{
+        expect(data).toHaveLength(1);
+      });
     });
-    it('"pathRead" should return error2',() => {
-        expect(pathRead('folderFiles0234')).toBe('la carpeta o ruta no existen');
+    test('mdLinks', async() => {
+      return mdLinks(fileEmpty).catch(data=>{
+        expect(data).toBe('el archivo esta vacio');
       });
-    it('"pathRead" should return all files .md',() => {
-        expect(pathRead('carpetaTest')).toHaveLength(4);
+     });
+    test('mdLinks', async() => {
+      return mdLinks(fileNoMd).catch(data=>{
+        expect(data.toString()).toContain('Error');
       });
+    });
+});
+      //----------------------------//
+describe('mdLinks (folder) without options', () => {
+  test.skip('mdLinks', async() => {                       //REVISAR
+      return mdLinks(folderAbsoluteRoute).then(data=>{
+        expect(data).toHaveLength(24);
+      });
+     });
+  test.skip('mdLinks', async() => {                   //REVISAR
+      return mdLinks(folderOneFile).then(data=>{
+        expect(data).toHaveLength(5);
+      });
+    });
+  test('mdLinks', async() => {
+      return mdLinks(folderEmpty).catch(data=>{
+        expect(data.toString()).toContain('TypeError');
+      });
+    });
 });
 
-describe(' pathReadMd', () => {
-  it('function "pathReadMd" should return files that are ".md"', () => {
-    expect( pathReadMd(folderArray)).toHaveLength(1)
-  });
-  it('function "pathReadMd" should return erro3 if the array has not ".md" files', () => {
-    expect( pathReadMd(folderArray2)).toBe('no hay archivos .md en la carpeta')
-  });
-});
 
-
-describe(' pathReadFile', () => {
-  it('function "pathReadFile" should return route of file ".md" normalize and absolute', () => {
-      expect(pathReadFile('readmeExample.md')).toBe(fileRoute);
-  });
-  it('function "pathReadFile" will be error if the file is not ".md"', () => {
-      expect(pathReadFile('thumb.png')).toBe('no es un archivo .md...');
-  });
-});
-
-/// cambiar sync ------
-describe('readmdLinks', () => {
-  test('readmdLinks', async() => {
-    return readmdLinks('readmeVacio.md').catch(error=>{
-      expect(error).toBe('el archivo esta vacio');
+// VALIDATE:FALSE --------------------------------------------------
+describe('mdLinks (file) with validate:false option', () => {
+  test.skip('mdLinks', async() => {                           //REVISAR
+    return mdLinks(fileRoute,{validate:false}).then(data=>{
+      expect(data).toHaveLength(1);
     });
   });
-
-  test('readmdLinks', async() => {
-    return readmdLinks('readmeExample.md').then(data=>{
+  test('mdLinks', async() => {
+    return mdLinks(fileEmpty,{validate:false}).catch(data=>{
+      expect(data).toBe('el archivo esta vacio');
+    });
+   });
+  test('mdLinks', async() => {
+    return mdLinks(fileNoMd,{validate:false}).catch(data=>{
+      expect(data.toString()).toContain('Error');
+    });
+  });
+});
+            //-------------------------//
+describe('mdLinks (folder) with validate:false option', () => {
+test.skip('mdLinks', async() => {                       //REVISAR
+    return mdLinks(folderAbsoluteRoute,{validate:false}).then(data=>{
+      expect(data).toHaveLength(24);
+    });
+   });
+test.skip('mdLinks', async() => {                   //REVISAR
+    return mdLinks(folderOneFile,{validate:false}).then(data=>{
       expect(data).toHaveLength(5);
     });
   });
-});
-//*******
-
-describe('converMdToHtml', () => {
-  it('function "converMdToHtml" will be error if the file has not links', () => {
-      expect( converMdToHtml('')).toBe('no hay links...');
-  });
-  it('function "converMdToHtml" array that contain all links with their document and text', () => {
-      expect(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)'])).toEqual([ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ])
-  });
-});
-
-describe('readDocuments', () => {
-  test('readDocuments', async() => {
-    return readDocuments('').catch(error =>{
-      expect(error.code).toBe('ENOEdNT: el archivo no existe');
-    });
-  });
-  test('readDocuments', async() => {
-    return readDocuments('src').catch(error=>{
-      expect(error.code).toBe('EISDIR');
-    });
-  });
-
-  test('readDocuments', async() => {
-    return readDocuments('readmeExample.md').then(data=>{
-      expect(data[1]).toContain('es un lenguaje de marcado');
+test('mdLinks', async() => {
+    return mdLinks(folderEmpty,{validate:false}).catch(data=>{
+      expect(data.toString()).toContain('TypeError');
     });
   });
 });
 
 
-describe('readDocumentsArr', () => {
-  test('readDocumentsArr', async() => {
-    return readDocumentsArr(arrrayEjemplo).then(data=>{
-      expect(data).toHaveLength(4);
+// VALIDATE TRUE --------------------------------------------------
+describe('mdLinks (file) with validate:false option', () => {
+  test('mdLinks', async() => {
+    return mdLinks(fileRoute,{'stats':true}).then(data=>{
+      expect(data).toEqual({ Total: '1', Unique: '1' });
+    });
+  });
+  test('mdLinks', async() => {
+    return mdLinks(fileEmpty,{stats:true}).catch(data=>{
+      expect(data).toEqual({ Total: '0', Unique: '0' });
+    });
+   });
+   test('mdLinks', async() => {
+    return mdLinks(fileNoExists,{stats:true}).catch(data=>{
+      expect(data).toBe('La ruta no existe..');
+    });
+   }); 
+  test('mdLinks', async() => {
+    return mdLinks(fileNoMd,{stats:true}).catch(data=>{
+      expect(data.toString()).toContain('Error');
+    });
+  });
+});
+            //--------------------------//
+describe('mdLinks (folder) with validate:false option', () => {
+test.skip('mdLinks', async() => {                       //REVISAR
+    return mdLinks(folderAbsoluteRoute,{stats:true}).then(data=>{
+      expect(data).toEqual({ Total: '24', Unique: '17' });
+    });
+   });
+test.skip('mdLinks', async() => {                   //REVISAR
+    return mdLinks(folderOneFile,{stats:true}).then(data=>{
+      expect(data).toEqual({ Total: '5', Unique: '4' });
+    });
+  });
+  test('mdLinks', async() => {
+    return mdLinks(folderNoMd,{stats:true}).catch(data=>{
+      expect(data).toEqual({ Total: '0', Unique: '0' });
+    });
+  }); 
+test('mdLinks', async() => {
+    return mdLinks(folderEmpty,{stats:true}).catch(data=>{
+      expect(data.toString()).toContain('TypeError');
     });
   });
 });
 
-describe('statsArrayStatus', () => {
-  it('function "statsArrayStatus" should return links with details', () => {
-    expect( statsArrayStatus([{file:'a',text:'b',href:'c',status:'e',result:'OK'},{file:'a',text:'b',href:'d',status:'e',result:'FAIL'},{file:'b',text:'b',href:'d',status:'e',result:'FAIL'}])).toEqual({Files:'2' ,Total:'3',Ok:'1',Broquen:'2',Unique:'2',UniqueOk:'1',UniqueBroquen:'1'})
+// STATS TRUE --------------------------------------------------
+describe('mdLinks (file) with validate:false option', () => {
+  test('mdLinks', async() => {
+    return mdLinks(fileRoute,{'stats':true}).then(data=>{
+      expect(data).toEqual({ Total: '1', Unique: '1' });
+    });
   });
-  it('function "statsArrayStatus" should return erro3 if the array has not links', () => {
-    expect( statsArrayStatus([])).toBe('No hay links por analizar...')
+  test('mdLinks', async() => {
+    return mdLinks(fileEmpty,{stats:true}).catch(data=>{
+      expect(data).toEqual({ Total: '0', Unique: '0' });
+    });
+   });
+   test('mdLinks', async() => {
+    return mdLinks(fileNoExists,{stats:true}).catch(data=>{
+      expect(data).toBe('La ruta no existe..');
+    });
+   }); 
+  test('mdLinks', async() => {
+    return mdLinks(fileNoMd,{stats:true}).catch(data=>{
+      expect(data.toString()).toContain('Error');
+    });
+  });
+});
+            //--------------------------//
+describe('mdLinks (folder) with validate:false option', () => {
+test.skip('mdLinks', async() => {                       //REVISAR
+    return mdLinks(folderAbsoluteRoute,{stats:true}).then(data=>{
+      expect(data).toEqual({ Total: '24', Unique: '17' });
+    });
+   });
+test.skip('mdLinks', async() => {                   //REVISAR
+    return mdLinks(folderOneFile,{stats:true}).then(data=>{
+      expect(data).toEqual({ Total: '5', Unique: '4' });
+    });
+  });
+  test('mdLinks', async() => {
+    return mdLinks(folderNoMd,{stats:true}).catch(data=>{
+      expect(data).toEqual({ Total: '0', Unique: '0' });
+    });
+  }); 
+test('mdLinks', async() => {
+    return mdLinks(folderEmpty,{stats:true}).catch(data=>{
+      expect(data.toString()).toContain('TypeError');
+    });
   });
 });
 
-describe('statsArray', () => {
-  it('function "statsArray" should return number of total and unique links WHEN there is a file ".md"', () => {
-    expect( statsArray(['link1','link2','link2'])).toEqual({ Total: '3', Unique: '2' })
-  });
-  it('function "statsArray" should return error if the array has not links WHEN there is a file ".md"', () => {
-    expect( statsArray(18)).toBe('...no se puede analizar')
-  });
-});
-
-describe('statsArrayGlobal', () => {
-  it('function "statsArrayGlobal" should return number of total and unique links WHEN there are diferents files ".md"', () => {
-    expect( statsArrayGlobal([['a','b','link1'],['c','d','link2'],['e','f','link2']])).toEqual({ Total: '3', Unique: '2' })
-  });
-  it('function "statsArrayGlobal" should return error if the array has not links WHEN there are diferents files ".md"', () => {
-    expect( statsArrayGlobal(18)).toBe('...no se puede analizar')
-  });
-});
 //-----
 
-  describe('readmdLinkStatus', () => {
-    beforeEach(() => axios.get.mockClear())
-    test('readmdLinkStatus OK', async() => {
-      axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
-      return readmdLinkStatus(links).then(data=>{
-        expect(data).toEqual(linksAxiosOk);
-      });
-    });
+  // describe('readmdLinkStatus', () => {
+  //   beforeEach(() => axios.get.mockClear())
+  //   test('readmdLinkStatus OK', async() => {
+  //     axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
+  //     return readmdLinkStatus(links).then(data=>{
+  //       expect(data).toEqual(linksAxiosOk);
+  //     });
+  //   });
 
-    test('readmdLinkStatus ERROR 400', async() => {
-      axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
-      return readmdLinkStatus(links).then(data=>{
-        expect(data).toEqual(linksAxiosFail1);
-      });
-    });
+  //   test('readmdLinkStatus ERROR 400', async() => {
+  //     axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
+  //     return readmdLinkStatus(links).then(data=>{
+  //       expect(data).toEqual(linksAxiosFail1);
+  //     });
+  //   });
 
-    test('readmdLinkStatus ERROR.request', async() => {
-      axios.get.mockImplementation(()=>Promise.reject({request:{status:'undefined'}}));
-      return readmdLinkStatus(links).then(data=>{
-        expect(data).toEqual(linksAxiosFail2);
-      });
-    });
+  //   test('readmdLinkStatus ERROR.request', async() => {
+  //     axios.get.mockImplementation(()=>Promise.reject({request:{status:'undefined'}}));
+  //     return readmdLinkStatus(links).then(data=>{
+  //       expect(data).toEqual(linksAxiosFail2);
+  //     });
+  //   });
 
-    test('readmdLinkStatus ERROR.request', async() => {
-      axios.get.mockImplementation(()=>Promise.reject({message:'ERROR'}));
-      return readmdLinkStatus(links).then(data=>{
-        expect(data).toEqual(linksAxiosFail3);
-      });
-    });
-  });
-
+  //   test('readmdLinkStatus ERROR.request', async() => {
+  //     axios.get.mockImplementation(()=>Promise.reject({message:'ERROR'}));
+  //     return readmdLinkStatus(links).then(data=>{
+  //       expect(data).toEqual(linksAxiosFail3);
+  //     });
+  //   });
+  // });
 

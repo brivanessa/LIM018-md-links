@@ -96,7 +96,7 @@ const readDocuments = (document) => {
     return fs.promises.readFile(document,'utf-8')
     .then(data  =>{ return([document,data])}) 
     .catch(error=>{
-        console.log(error.code)
+        //console.log(error.code)
         return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
     })
 }

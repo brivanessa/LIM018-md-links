@@ -7,9 +7,9 @@ const path = require('path');
 const mdLinks = (route,elements) => {
     return new Promise((res,rej) => {
     if (!!elements==false) {
-        console.log(`***************************************************************`.yellow)
-        console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
-        console.log(`***************************************************************`.yellow)       
+        // console.log(`***************************************************************`.yellow)
+        // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
+        // console.log(`***************************************************************`.yellow)       
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 const file = mainFunctions.pathReadFile(route);
                 return mainFunctions.readmdLinks(file)
@@ -28,9 +28,9 @@ const mdLinks = (route,elements) => {
                 return('La ruta no existe..')
             }    
     } else if ((elements.validate) && (elements.stats)) {
-            console.log(`*******************************************************************`.yellow)
-            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${"{'validate':true, 'stats':true}".bgBlue}) ----- mdLinks ` )
-            console.log(`*******************************************************************`.yellow)
+            // console.log(`*******************************************************************`.yellow)
+            // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${"{'validate':true, 'stats':true}".bgBlue}) ----- mdLinks ` )
+            // console.log(`*******************************************************************`.yellow)
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 return mainFunctions.readDocuments(route)
                 .then(data => { return mainFunctions.converMdToHtml(data) })
@@ -59,9 +59,9 @@ const mdLinks = (route,elements) => {
                 res('La ruta no existe..')
             }                
         } else if (elements.stats) {
-            console.log(`*******************************************************************`.yellow)
-            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{stats}'.bgYellow}) ----- mdLinks ` )
-            console.log(`*******************************************************************`.yellow)
+            // console.log(`*******************************************************************`.yellow)
+            // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{stats}'.bgYellow}) ----- mdLinks ` )
+            // console.log(`*******************************************************************`.yellow)
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 return mainFunctions.readDocuments(route)
                     .then(data  =>{ 
@@ -87,9 +87,9 @@ const mdLinks = (route,elements) => {
                 res('La ruta no existe..')
             }
         } else if  (elements.validate) {
-            console.log(`*******************************************************************`.yellow)
-            console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
-            console.log(`*******************************************************************`.yellow)
+            // console.log(`*******************************************************************`.yellow)
+            // console.log(`  mdLinks ----- mdLinks(${route.bgGreen}, ${'{validate:true}'.bgBlue}) ----- mdLinks ` )
+            // console.log(`*******************************************************************`.yellow)
             if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                 return mainFunctions.readDocuments(route)
                 .then(data  =>{ return mainFunctions.converMdToHtml(data)})
@@ -117,9 +117,9 @@ const mdLinks = (route,elements) => {
             } 
                
         } else {
-            console.log(`***************************************************************`.yellow)
-            console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
-            console.log(`***************************************************************`.yellow)       
+            // console.log(`***************************************************************`.yellow)
+            // console.log(`   mdLinks ---------- mdLinks(${route.bgGreen}) ----------- mdLinks ` )
+            // console.log(`***************************************************************`.yellow)       
                 if(path.extname(route)=='.md' && mainFunctions.existRoute(route)){
                     const file = mainFunctions.pathReadFile(route);
                     return mainFunctions.readmdLinks(file)
