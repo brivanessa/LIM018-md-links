@@ -2,7 +2,7 @@
 
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md');
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md');
-//const mdLinks2 = mdlinksFunction.mdLinks('../readmeVo.md');
+//const mdLinks2 = mdlinksFunction.mdLinks('../readmeOk.md'); //////
 //const mdLinks2 = mdlinksFunction.mdLinks('../thumb.png');
 
 //const mdLinks2 = mdlinksFunction.mdLinks('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta');
@@ -54,16 +54,18 @@
 
 //STATS Y VALIDATE TRUE ok
 
-//const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{'validate':true,'stats':true});
+//const mdLinks2 = mdlinksFunction.mdLinks('../readmeAllOkLinks.md',{'validate':true,'stats':true});
+//const mdLinks2 = mdlinksFunction.mdLinks('../readmeAllFailLinks.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVo.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../thumb.png',{'validate':true,'stats':true});
 
 //const mdLinks2 = mdlinksFunction.mdLinks('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta',{'validate':true,'stats':true});
+//++++++
+
 //const mdLinks2 = mdlinksFunction.mdLinks('../carpeta',{'validate':true,'stats':true});
-//const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{'validate':true,'stats':true});
-//const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesNoMd',{'validate':true,'stats':true});
-//const mdLinks2 = mdlinksFunction.mdLinks('../folderFiles0',{'validate':true,'stats':true}); // revisar que me salga error
+//const mdLinks2 = mdlinksFunction.mdLinks('../carpetaTest',{'validate':true,'stats':true});
+//const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesDDDD',{'validate':true,'stats':true}); // revisar que me salga error
 
 
 // const elements = {'validate':true,

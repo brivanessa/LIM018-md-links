@@ -1,8 +1,8 @@
 # Markdown Links
 
-## 1. [Preámbulo](https://es.wikipedia.org/wiki/Markdown)
+## 1. [Arreglos](https://blueg.co.uk/404)
 
-[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
+[Arreglos](https://blueg.co.uk/404) es un lenguaje de marcado
 ligero muy popular entre developers. Es usado en muchísimas plataformas que
 manejan texto plano (GitHub, foros, blogs, ...) y es muy común
 encontrar varios archivos en ese formato en cualquier tipo de repositorio
@@ -13,7 +13,7 @@ muchas veces están rotos o ya no son válidos y eso perjudica mucho el valor de
 la información que se quiere compartir.
 
 Dentro de una comunidad de código abierto, nos han propuesto crear una
-herramienta usando [Node.js](http://nodejs.og/), que lea y analice archivos
+herramienta usando [Arreglos](https://blueg.co.uk/404), que lea y analice archivos
 en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas. [PIXAR](https://www.lego.com/en-us/notfound)
   * [Arreglos](https://blueg.co.uk/404)
