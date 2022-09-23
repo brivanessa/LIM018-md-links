@@ -84,7 +84,7 @@ const readmdLinks=(document) => {
         })
         return(doclistLinks)
     })
-    .catch('el archivo esta vacio')
+    .catch(error=>{return(error)})
 }
 
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
@@ -98,24 +98,17 @@ const readDocuments = (document) => {
         return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
     })
 }
-// readDocuments('')
-// //readDocuments('src')
-
-// .then((data)=>console.log(data))
-// .catch((error)=>console.log(error))
-
 
 /*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
 const readDocumentsArr = (documentArr) => { 
-    return Promise.all(
-        documentArr.map((document)=>{
-                return readDocuments(document)
-                .then(data => { return data})
-                // .catch(error=>{  // ES NECESARIO?
-                //     return error
-                // }) 
+    // console.log('ffff',documentArr)
+
+     const allPromises = documentArr.map((document)=>{
+            return readDocuments(document)
+            .then(data => { return data})
+            .catch(error=>{ return error})                     // ES NECESARIO
         })
-    )              
+    return Promise.all(allPromises) 
 }  
 /*---------------------- PASO 2: convertir Md a HTML       YES TEST **************/
 const converMdToHtml = (documentHtml) => {
@@ -168,7 +161,7 @@ const statsArrayStatus= (arrayLinks) => {
 let docsLinkStatusOk;
 let docsLinkStatusFail; 
 const readmdLinkStatus = (linksGlobal) => {
-    return Promise.all(linksGlobal.map((link)=>{
+    const allPromisesWithAxios= linksGlobal.map((link)=>{
         return axios.get(link[2])
             .then( (response)=>{
                 docsLinkStatusOk=({
@@ -210,23 +203,10 @@ const readmdLinkStatus = (linksGlobal) => {
                     return(docsLinkStatusFail)
                 } 
             }); 
-    }))
+    })
+    return Promise.all(allPromisesWithAxios)
 }  
-/******** PROBANDO readmdLinkStatus 
-let linksExamples= [
-    [ 'a', '1', 'https://es.wikipedia.org/wiki/Markdown'],
-    [ 'a', '2','https://es.wiki.org/wiki/Markdown'],
-    ]
-readmdLinkStatus(linksExamples)  
-.then((data) => {
-    console.log(data)
-    return data
-})
-.catch((error) => {
-    console.log(error)
-    return error
-})
-*/ 
+ 
 /*---------------------- PASO3: STATS DE LINKS DE UN ARCHIVO MD      **************/
 let statLinksLast;
 const statsArray= (arrayLinks) => {

@@ -20,16 +20,27 @@ const mdLinks = (route,elements) => {
 
             }else if (mainFunctions.existRoute(route)){
                 const folder = mainFunctions.pathRead(route);
-                return Promise.all(
-                    folder.map((item)=>{ 
+                (folder=='')?res('La ruta no tiene archivos .md...'):(folder)
+                const promisesFs=folder.map((item)=>{ 
                         return mainFunctions.readmdLinks(item)
                         .then((data)=> {return(data)})
                         .catch((error)=> {return(error)})
-                    }))
-                .then(data=>{return (data[0])})
-                .then((data)=> {res(data)})
+                    })
+                return Promise.all(promisesFs)   
+                // .then(data=>{
+                //     console.log('cccc',data)
+                //     return (data[0])})
+                // .then((data)=> {res(data)})
+
+                .then(data => { return ((data[0]))})
+                .then(data =>(res(data)))
+                .catch(error => rej(error))    //////
+
+
+
+
             } else {
-                return('La ruta no existe..')
+                rej('La ruta no existe..')
             }    
         } else if ((elements.validate) && (elements.stats)) {
             // console.log(`*******************************************************************`.yellow)
@@ -47,6 +58,7 @@ const mdLinks = (route,elements) => {
                 .catch(error=>{ rej(error) }) 
             } else if (mainFunctions.existRoute(route)){
                 let folder = mainFunctions.pathRead(route);
+                (folder=='')?res('La ruta no tiene archivos .md...'):(folder)
                 mainFunctions.readDocumentsArr(folder)
                 .then(data  =>{ return data.map((item)=> {
                                     return mainFunctions.converMdToHtml(item)
@@ -54,7 +66,7 @@ const mdLinks = (route,elements) => {
                 })
                 .catch(error=>{ return(error) })
                 .then(data  =>{ return(mainFunctions.readmdLinkStatus(...new Set(data)))})
-                .catch(error=>{ return(`${error}: La carpeta no contiene files '.md'..`)})      
+                .catch(error=>{ return(error) })
                 .then(data  =>{ return(mainFunctions.statsArrayStatus(data))})
                 .catch(error=>{ return(error) })  
                 .then(data  =>{ res(data) })
@@ -75,18 +87,17 @@ const mdLinks = (route,elements) => {
                     .catch(error=>{ rej(error)}) 
             } else if(mainFunctions.existRoute(route)){ // FUNCIONA BUT SOS ARREGLAR
                 const folder = mainFunctions.pathRead(route);
-                Promise.all(
-                    folder.map((item)=>{
+                (folder=='')?res('La ruta no tiene archivos .md...'):(folder)
+                const allPromisesFs = folder.map((item)=>{
                     return mainFunctions.readmdLinks(item) //promesa que devuelve lista de objetos con links
-                        .then((data)  => {res(data)})
-                        .catch((error)=> {rej(error)})
+                        .then((data)  => {return(data)})
+                        .catch((error)=> {return(error)}) ////////
                     })
-                )
-                const datos = mainFunctions.doclistLinks;
-                const links = datos.map((item)=>{
-                                return item.href
-                              })
-                res(mainFunctions.statsArray(links))
+                Promise.all(allPromisesFs)
+                .then(data => { return ((data[0]).map((item) => (item.href)))})
+                .then(data => {res(mainFunctions.statsArray(data))})
+                .catch(error => rej(error))    //////
+                // })
             } else {
                 res('La ruta no existe..')
             }
@@ -104,7 +115,8 @@ const mdLinks = (route,elements) => {
                 .catch(error=>{ rej(error) })   
             }  
             else if (mainFunctions.existRoute(route)){
-                let folder=mainFunctions.pathRead(route);
+                const folder=mainFunctions.pathRead(route);
+                (folder=='')?res('La ruta no tiene archivos .md...'):(folder)
                 mainFunctions.readDocumentsArr(folder)
                 .then(data  =>{
                     return data.map((item)=>{
@@ -113,7 +125,7 @@ const mdLinks = (route,elements) => {
                 })
                 .catch(error=>{ return(error) })  
                 .then(data  =>{ return(mainFunctions.readmdLinkStatus(...new Set(data)))})
-                .catch(error=>{ return(`${error}:La carpeta no contiene files '.md'..`)})      
+                .catch(error=>{ return(error) })  
                 .then(data  =>{ res(data) })
                 .catch(error=>{ rej(error) })
             } else {

@@ -21,36 +21,34 @@ const folderNoExists = 'readmeOk'
 // NO OPTIONS --------------------------------------------------
 describe('mdLinks (file) without options', () => {
     test('mdLinks', async() => {
-      return mdLinks(fileRoute).then(data=>{
-        expect(data).toHaveLength(1);
-      });
+      const data = await mdLinks(fileRoute);
+      expect(data).toHaveLength(1);
     });
     test('mdLinks', async() => {
-      return mdLinks(fileEmpty).catch(data=>{
-        expect(data).toBe('el archivo esta vacio');
-      });
-     });
+      const data = await mdLinks(fileEmpty);
+      expect(data).toBe('el archivo esta vacio');
+    });
     test('mdLinks', async() => {
-      return mdLinks(fileNoMd).catch(data=>{
-        expect(data.toString()).toContain('Error');
-      });
+      const data = await mdLinks(fileNoMd);
+      expect(data.toString()).toContain('Error');
+    });
+    test('mdLinks', async() => {   
+      const data = await  mdLinks(fileNoExists);
+      expect(data).toThrow('La ruta no existe..');
     });
 });
       //----------------------------//
 describe('mdLinks (folder) without options', () => {
 
   test('mdLinks', async() => {                    //REVISAR    
-      return mdLinks(folderAbsoluteRoute).then(data=>{
-        expect(data).toHaveLength(24);
-      });
-     });
+    const data = await  mdLinks(folderAbsoluteRoute);
+    expect(data).toHaveLength(24);
+  });
   test('mdLinks', async() => {                   //REVISAR
-      return mdLinks(folderOneFile).then(data=>{
-        expect(data).toHaveLength(5);
-      });
+    const data = await  mdLinks(folderOneFile);
+    expect(data).toHaveLength(5);
     });
 });
-
 
 // VALIDATE:FALSE --------------------------------------------------
 describe('mdLinks (file) with validate:false option', () => {
@@ -118,11 +116,10 @@ describe('mdLinks (file) with validate:true option', () => {
             //--------------------------//
 describe('mdLinks (folder) with validate:true option', () => {
   beforeEach(() => axios.get.mockClear()) 
-    test('mdLinks', async() => {                                                     //REVISAR
+    test('mdLinks', async () => {                                                     //REVISAR
      axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
-      return mdLinks(folderAbsoluteRoute,{validate:true}).then(data=>{
-        expect(data).toHaveLength(24);
-      });
+      const data = await mdLinks(folderAbsoluteRoute, { validate: true });
+      expect(data).toHaveLength(24);
     });
     test('mdLinks', async() => {                                                    //REVISAR
       axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
