@@ -1,10 +1,10 @@
-// const axios = require('axios')
+const axios = require('axios')
 
 const {
   mdLinks,
 } = require('../src/mdLinks')
 
-// jest.mock('axios')
+jest.mock('axios')
 
 const folderAbsoluteRoute1 = '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta';
 const fileRoute1 = 'readmeAllOkLinks.md';
@@ -121,10 +121,10 @@ test('mdLinks', async() => {
 describe('mdLinks (file) with validate:true option', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // axios.get.mockClear()
+    axios.get.mockClear()
   });
   test('mdLinks', async() => {
-    // axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
+    axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
     return mdLinks(fileRoute1,{validate:true}).then(data=>{
       expect(data).toHaveLength(1);
     });
@@ -143,7 +143,7 @@ describe('mdLinks (file) with validate:true option', () => {
 });
             //--------------------------//
 describe('mdLinks (folder) with validate:true option', () => {
-  // beforeEach(() => axios.get.mockClear()) 
+  beforeEach(() => axios.get.mockClear()) 
     // test('mdLinks', async () => {                                                     //FAIL 24 - 88
     //  axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
     //   const data = await mdLinks(folderAbsoluteRoute, { validate: true });
@@ -218,7 +218,7 @@ test('mdLinks', async() => {
 
 // VALIDATE TRUE & STATS TRUE --------------------------------------------------
 describe('mdLinks (file) with validate:false option', () => {                                  //FAIL
-  // beforeEach(() => axios.get.mockClear()) 
+  beforeEach(() => axios.get.mockClear()) 
   // test('mdLinks', async() => {
   //   axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
   //   return mdLinks(fileRoute,{validate:true,stats:true}).then(data=>{
@@ -244,18 +244,18 @@ describe('mdLinks (file) with validate:false option', () => {                   
 });
             //--------------------------//
 describe('mdLinks (folder) with validate:true & stats:true option', () => {                                  //FAIL
-  // beforeEach(() => axios.get.mockReset()) 
-  test('mdLinks', async() => {   
+  beforeEach(() => axios.get.mockReset()) 
+  test('mdLinks3', async() => {   
     // axios.get.mockClear()                  
-    // axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
+    axios.get.mockImplementation(()=>Promise.resolve({status:'200', statusText:'OK'}));
       //console.log(mdLinks(folderAbsoluteRoute))
-      return mdLinks(folderAbsoluteRoute1,{validate:true,stats:true}).then(data=>{
+      return mdLinks(folderAbsoluteRoute1,{'validate':true,'stats':true}).then(data=>{
         expect(data).toEqual({Files:'4',Total:'24',Ok:'24',Broquen:'0',Unique:'4',UniqueOk:'4',UniqueBroquen:'0'});
       });
      });
 
   test('mdLinks', async() => {
-    // axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
+    axios.get.mockImplementation(()=>Promise.reject({response:{status:'400'}}));
     return mdLinks(folderFail,{validate:true,stats:true}).catch(data=>{
       expect(data).toEqual({Files:'4',Total:'8',Ok:'0',Broquen:'8',Unique:'2',UniqueOk:'2',UniqueBroquen:'0'});
     });

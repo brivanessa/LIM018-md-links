@@ -48,11 +48,9 @@ const  pathRead = (ruta) => {
             return(`${error1}`);
         } else if (readFolder(ruta)==error2){
             return(`${error2}`);
-        // } else if (pathReadMd(readFolder(ruta))==error3){
-        //     return(`${error3}`);
-        } else if ((readFolder(ruta)!=error1)||(readFolder(ruta)!=error2)){
+        } else {
             const archivos = readFolder(ruta);
-                pathReadMd(archivos);
+            pathReadMd(archivos); //PARA guardar en doclist los archivos .md que estan en la primera ruta
             const folders = pathReadFolders(archivos);
             if  (folders!=error4){
                 folders.map(doc=>{ return (pathRead(doc))})
@@ -84,7 +82,7 @@ const readmdLinks=(document) => {
         })
         return(doclistLinks)
     })
-    .catch(error=>{return(error)})
+    // .catch(error=>{return(error)})   //ES NECESARIO
 }
 
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
@@ -101,12 +99,10 @@ const readDocuments = (document) => {
 
 /*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
 const readDocumentsArr = (documentArr) => { 
-    // console.log('ffff',documentArr)
-
      const allPromises = documentArr.map((document)=>{
             return readDocuments(document)
             .then(data => { return data})
-            .catch(error=>{ return error})                     // ES NECESARIO
+            // .catch(error=>{ return error})                     // ES NECESARIO
         })
     return Promise.all(allPromises) 
 }  
