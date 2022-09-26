@@ -27,7 +27,7 @@ const mdlinksFunction = require('./mdLinks.js');
 
 // VALIDATE TRUE ok
 
-const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{validate:true});
+//const mdLinks2 = mdlinksFunction.mdLinks('../readmeAllOkLinks.md',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVo.md',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../thumb.png',{validate:true}); //revisar
@@ -47,13 +47,13 @@ const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{validate:true});
 
 //const mdLinks2 = mdlinksFunction.mdLinks('/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/carpeta',{stats:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../carpeta',{stats:true});
-//const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{stats:true});
+const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{stats:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesNoMd',{stats:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFiles0',{stats:true}); // revisar que me salga error
 
 
 //STATS Y VALIDATE TRUE ok
-
+//const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeAllOkLinks.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeAllFailLinks.md',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../readmeVacio.md',{'validate':true,'stats':true}); //copiar a los demas
@@ -67,6 +67,7 @@ const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{validate:true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../carpetaTest',{'validate':true,'stats':true});
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesDDDD',{'validate':true,'stats':true}); 
 //const mdLinks2 = mdlinksFunction.mdLinks('../folderFilesNoMd',{'validate':true,'stats':true});
+//const mdLinks2 = mdlinksFunction.mdLinks('../folderTestOneFileMd',{'validate':true,'stats':true});
 
 
 // const elements = {'validate':true,
@@ -75,10 +76,10 @@ const mdLinks2 = mdlinksFunction.mdLinks('../readmeExample.md',{validate:true});
 // //console.log(elements)
 
 // console.log('ddddd')
-// mdLinks2.then((data)=>{
-//     console.log(data)
-// },(error)=>{
-//     console.log(`Error: ${error}`)
+mdLinks2.then((data)=>{
+    console.log(data)
+},(error)=>{
+    console.log(`Error: ${error}`)
 
-//     return (`Error: ${error}`)
-// })
+    return (`Error: ${error}`)
+})

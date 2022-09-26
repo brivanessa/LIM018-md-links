@@ -17,7 +17,8 @@
     "test": "jest"
   },
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "clear_jest": "jest --clearCache"
   },
   "repository": {
     "type": "git",

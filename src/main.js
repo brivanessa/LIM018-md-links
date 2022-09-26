@@ -23,7 +23,8 @@ function readFolder(ruta){
     let rutaAbsoluta = pathGlobal(ruta);
     if (existRoute(rutaAbsoluta)==true){
         return (fs.readdirSync(ruta).length === 0)?(error1): fs.readdirSync(ruta).map(doc=>{return path.join(rutaAbsoluta,doc)});
-    } else {return (error2)}
+    } 
+    // else {return (error2)}
 }
 //          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO  YES TEST ***********
 function pathReadMd(carpetaArray){ 
@@ -44,11 +45,11 @@ function pathReadFolders(carpetaArray){
 }
 //          PASO 4:  ARCHIVOS CON RECURSIVIDAD  YES TEST ***********************
 const  pathRead = (ruta) => { 
-        if (readFolder(ruta)==error1){
-            return(`${error1}`);
-        } else if (readFolder(ruta)==error2){
-            return(`${error2}`);
-        } else {
+        // if (readFolder(ruta)==error1){
+        //     return(`${error1}`);
+        // } else if (readFolder(ruta)==error2){
+        //     return(`${error2}`);
+        // } else {
             const archivos = readFolder(ruta);
             pathReadMd(archivos); //PARA guardar en doclist los archivos .md que estan en la primera ruta
             const folders = pathReadFolders(archivos);
@@ -56,14 +57,15 @@ const  pathRead = (ruta) => {
                 folders.map(doc=>{ return (pathRead(doc))})
             }
             return(docslist);
-        } 
+        // } 
     }
 // LEER ARCHIVOS ARCHIVOS MD           YES TEST*******************************
 const pathReadFile = (ruta)=> { 
         if(path.extname(ruta)==='.md'){
             docslist.push(pathGlobal(ruta))
             return(pathGlobal(ruta))
-        } else {return('no es un archivo .md...')}  
+        } 
+        // else {return('no es un archivo .md...')}  
 }
 // MD LINKS LISTA DE LINKS ***YES TEST (CAMBIAR fs.Sync)***********************
 let doclistLinks=[];
@@ -91,10 +93,10 @@ let linksGlobal=[];
 const readDocuments = (document) => { 
     return fs.promises.readFile(document,'utf-8')
     .then(data  =>{ return([document,data])}) 
-    .catch(error=>{
-        //console.log(error.code)
-        return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-    })
+    // .catch(error=>{
+    //     //console.log(error.code)
+    //     return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
+    // })
 }
 
 /*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
@@ -114,7 +116,8 @@ const converMdToHtml = (documentHtml) => {
                 return linksGlobal.push([documentHtml[0],elemento.children[0].nodeValue,elemento.attributes[0].value])  
             })
             return(linksGlobal)
-        } else {return('no hay links...')}
+        } 
+        // else {return('no hay links...')}
 }
 /*---------------------- PASO3: STATS DE LINKS       DE DIFERENTES .MD    YES TEST **************/
 let statLinks;
@@ -126,7 +129,7 @@ const statsArrayGlobal= (arrayLinks) => {
             'Unique': `${[...new Set(arrayOnlyLinks)].length}`}
         return(statLinks)    
     }
-    else{return('...no se puede analizar')}
+    // else{return('...no se puede analizar')}
 }
 /*---------------------- PASO3: STATS DE LINKS  CON STATUS            YES TEST **************/
 const statsArrayStatus= (arrayLinks) => {
@@ -151,7 +154,7 @@ const statsArrayStatus= (arrayLinks) => {
         }
         return(statLinks)    
     }
-    else{return('No hay links por analizar...')}
+    // else{return('No hay links por analizar...')}
 }
 // MD LINKS STATUS CODE     *************************************************************
 let docsLinkStatusOk;
@@ -212,7 +215,7 @@ const statsArray= (arrayLinks) => {
             'Unique': `${[...new Set(arrayLinks)].length}`}
         return(statLinksLast)    
     }
-    else{return('...no se puede analizar')}
+    // else{return('...no se puede analizar')}
 }
 module.exports = {
     existRoute,
