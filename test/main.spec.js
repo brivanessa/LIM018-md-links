@@ -79,14 +79,8 @@ describe('pathReadFolders', () => {
 });
 
 describe('pathRead', () => {
-    // it('"pathRead" should return error1',() => {
-    //     expect(pathRead('folderFiles0')).toBe('no hay archivos en la carpeta');
-    // });
-    // it('"pathRead" should return error2',() => {
-    //     expect(pathRead('folderFiles0234')).toBe('la carpeta o ruta no existen');
-    //   });
     it('"pathRead" should return all files .md',() => {
-        expect(pathRead('carpetaTest')).toHaveLength(4);
+        expect(pathRead('carpeta')).toHaveLength(4);
       });
 });
 
