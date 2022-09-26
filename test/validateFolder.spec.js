@@ -1,4 +1,4 @@
-const { mdLinks } = require('../src/mdLinks.js')
+const { mdLinks } = require('../src/index.js')
 const axios = require('axios')
 jest.mock('axios')
 

@@ -1,4 +1,4 @@
-const { mdLinks } = require('../src/mdLinks.js')
+const { mdLinks } = require('../src/index.js')
 
  const folderWithoutOptions=[
   {link: '1/3', href: 'https://es.wikipedia.org/wiki/Markdown', text: 'Preámbulo', file: 'fileTestExample.md', route: '/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderTestOneFileMd/fileTestExample.md'},

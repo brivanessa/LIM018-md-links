@@ -1,4 +1,4 @@
-const { mdLinks } = require('../src/mdLinks.js')
+const { mdLinks } = require('../src/index.js')
 
 describe('mdLinks (folder)', () => {
   test('mdLinks stats option', async() => {                   
