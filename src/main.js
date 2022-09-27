@@ -6,29 +6,29 @@ const marked = require('marked'); //HTML // En consola : npm install  marked
 const cheerio = require('cheerio'); //ELEMENT
 const axios = require('axios'); //BREAK
 
-// LA RUTA EXISTE          YES TEST *****************************************
+// LA RUTA EXISTE                   *****************************************
 const existRoute =(route) => fs.existsSync((route))
-// RUTA ABSOLUTA Y NORMALIZADA    YES TEST **********************************
+
+// RUTA ABSOLUTA Y NORMALIZADA             **********************************
 function pathGlobal(routaInput){
     return path.normalize(path.isAbsolute(routaInput)?routaInput:path.resolve(routaInput));
 }
+
 // LEER ARCHIVOS DE UN DIRECTORIO: ARCHIVOS MD *******************************
-let docslist=[];
+const docslist = [];
 const error1 = 'no hay archivos en la carpeta'
-const error2 = 'la carpeta o ruta no existen'
 const error3 = 'no hay archivos .md en la carpeta'
 const error4 = 'no hay folders en la carpeta'
 //          PASO 1: LISTA DE ARCHIVOS DE UN DIRECTORIO ************************
 function readFolder(ruta){
-    let rutaAbsoluta = pathGlobal(ruta);
+    const rutaAbsoluta = pathGlobal(ruta);
     if (existRoute(rutaAbsoluta)==true){
         return (fs.readdirSync(ruta).length === 0)?(error1): fs.readdirSync(ruta).map(doc=>{return path.join(rutaAbsoluta,doc)});
     } 
-    // else {return (error2)}
 }
-//          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO  YES TEST ***********
+//          PASO 2: LISTA DE ARCHIVOS MD DE UN DIRECTORIO  *********************
 function pathReadMd(carpetaArray){ 
-    let mdFiles = carpetaArray.filter(doc => {return(path.extname(doc)==='.md')});
+    const mdFiles = carpetaArray.filter(doc => {return(path.extname(doc)==='.md')});
         if (mdFiles.length === 0){ 
             return(error3)
         } else {
@@ -36,43 +36,36 @@ function pathReadMd(carpetaArray){
             return mdFiles
         }
 }
-//          PASO 3: LISTA DE CARPETAS DE UN DIRECTORIO  YES TEST **************
+//          PASO 3: LISTA DE CARPETAS DE UN DIRECTORIO  **************
 function pathReadFolders(carpetaArray){ 
-    let folders = carpetaArray.filter(doc => {return(!!path.extname(doc)==false)});
-        if (folders.length === 0){ 
-            return(error4);
-        } else {return folders}
+    const folders = carpetaArray.filter(doc => {return(!!path.extname(doc)==false)});
+    if (folders.length === 0){ 
+        return(error4);
+    } else {return folders}
 }
-//          PASO 4:  ARCHIVOS CON RECURSIVIDAD  YES TEST ***********************
+//          PASO 4:  ARCHIVOS CON RECURSIVIDAD  *************************
 const  pathRead = (ruta) => { 
-        // if (readFolder(ruta)==error1){
-        //     return(`${error1}`);
-        // } else if (readFolder(ruta)==error2){
-        //     return(`${error2}`);
-        // } else {
-            const archivos = readFolder(ruta);
-            pathReadMd(archivos); //PARA guardar en doclist los archivos .md que estan en la primera ruta
-            const folders = pathReadFolders(archivos);
-            if  (folders!=error4){
-                folders.map(doc=>{ return (pathRead(doc))})
-            }
-            return(docslist);
-        // } 
+    const archivos = readFolder(ruta);
+    pathReadMd(archivos); //PARA guardar en doclist los archivos .md que estan en la primera ruta
+    const folders = pathReadFolders(archivos);
+    if  (folders!=error4){
+        folders.map(doc=>{ return (pathRead(doc))})
     }
-// LEER ARCHIVOS ARCHIVOS MD           YES TEST*******************************
-const pathReadFile = (ruta)=> { 
-        if(path.extname(ruta)==='.md'){
-            docslist.push(pathGlobal(ruta))
-            return(pathGlobal(ruta))
-        } 
-        // else {return('no es un archivo .md...')}  
+    return(docslist);
 }
-// MD LINKS LISTA DE LINKS ***YES TEST (CAMBIAR fs.Sync)***********************
-let doclistLinks=[];
+// LEER ARCHIVOS ARCHIVOS MD           ********************************
+const pathReadFile = (ruta)=> { 
+    if(path.extname(ruta)==='.md'){
+        docslist.push(pathGlobal(ruta))
+        return(pathGlobal(ruta))
+    } 
+}
+// MD LINKS LISTA DE LINKS ********************************************
+const doclistLinks=[];
 const readmdLinks=(document) => {
     return fs.promises.readFile(document,'utf-8')
     .then(data  =>{
-        let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
+        const mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${data}**.`));
         mdToHtml('a').each(function(indice, elemento){
             doclistLinks.push({
               'link': `${indice+1}/${mdToHtml('a').length}`,
@@ -84,54 +77,45 @@ const readmdLinks=(document) => {
         })
         return(doclistLinks)
     })
-    // .catch(error=>{return(error)})   //ES NECESARIO
 }
-
 // MD LINKS STATS LISTA DE LINKS CON PROMESAS *******************************
-let linksGlobal=[];
-/*---------------------- PASO 1: LEER .MD            YES TEST **************/
+const linksGlobal=[];
+/*---------------------- PASO 1: LEER .MD     ******************************/
 const readDocuments = (document) => { 
     return fs.promises.readFile(document,'utf-8')
     .then(data  =>{ return([document,data])}) 
-    // .catch(error=>{
-    //     //console.log(error.code)
-    //     return((`${error.code}`=='ENOENT')?(`${error.code}: el archivo no existe`):`${error.code}`)
-    // })
 }
 
-/*---------------------- PASO 1: LEER ARRAY CON .MD            YES TEST **************/
+/*---------------------- PASO 2: LEER ARRAY CON .MD           **************/
 const readDocumentsArr = (documentArr) => { 
      const allPromises = documentArr.map((document)=>{
             return readDocuments(document)
             .then(data => { return data})
-            // .catch(error=>{ return error})                     // ES NECESARIO
         })
     return Promise.all(allPromises) 
 }  
-/*---------------------- PASO 2: convertir Md a HTML       YES TEST **************/
+/*---------------------- PASO 3: convertir Md a HTML     ******************/
 const converMdToHtml = (documentHtml) => {
-        if(documentHtml!=''){
-            let mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml[1]}**.`));
-            mdToHtml('a').each( function(indice,elemento){
-                return linksGlobal.push([documentHtml[0],elemento.children[0].nodeValue,elemento.attributes[0].value])  
-            })
+    if(documentHtml!=''){
+        const mdToHtml=cheerio.load(marked.parse(`'# Marked in Node.js\n\nRendered by **${documentHtml[1]}**.`));
+        mdToHtml('a').each( function(indice,elemento){
+            return linksGlobal.push([documentHtml[0],elemento.children[0].nodeValue,elemento.attributes[0].value])  
+        })
             return(linksGlobal)
         } 
-        // else {return('no hay links...')}
 }
-/*---------------------- PASO3: STATS DE LINKS       DE DIFERENTES .MD    YES TEST **************/
+/*---------------------- PASO 4: STATS DE LINKS DE DIFERENTES .MD   ********/
 let statLinks;
 const statsArrayGlobal= (arrayLinks) => {
     if(typeof(arrayLinks)=='object'){
-        let arrayOnlyLinks=arrayLinks.map((link)=>{return(link[2])})    
+        const arrayOnlyLinks=arrayLinks.map((link)=>{return(link[2])})    
         statLinks= 
             { 'Total': `${arrayOnlyLinks.length}`,
             'Unique': `${[...new Set(arrayOnlyLinks)].length}`}
         return(statLinks)    
     }
-    // else{return('...no se puede analizar')}
 }
-/*---------------------- PASO3: STATS DE LINKS  CON STATUS            YES TEST **************/
+/*---------------------- PASO 5: STATS DE LINKS  CON STATUS       ********/
 const statsArrayStatus= (arrayLinks) => {
     if(typeof(arrayLinks)=='object'&& arrayLinks.length>=1){
         const links=arrayLinks.map((link)=>{return(link.href)})  
@@ -154,8 +138,8 @@ const statsArrayStatus= (arrayLinks) => {
         }
         return(statLinks)    
     }
-    // else{return('No hay links por analizar...')}
 }
+
 // MD LINKS STATUS CODE     *************************************************************
 let docsLinkStatusOk;
 let docsLinkStatusFail; 
@@ -215,7 +199,6 @@ const statsArray= (arrayLinks) => {
             'Unique': `${[...new Set(arrayLinks)].length}`}
         return(statLinksLast)    
     }
-    // else{return('...no se puede analizar')}
 }
 module.exports = {
     existRoute,
@@ -232,10 +215,5 @@ module.exports = {
     readDocuments,
     statsArray,
     readDocumentsArr,
-    linksGlobal,
-    doclistLinks,
-    statLinks,
-    docsLinkStatusOk,
-    docsLinkStatusFail,
   };
   

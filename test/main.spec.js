@@ -98,18 +98,10 @@ describe(' pathReadFile', () => {
   it('function "pathReadFile" should return route of file ".md" normalize and absolute', () => {
       expect(pathReadFile('readmeExample.md')).toBe(fileRoute);
   });
-  // it('function "pathReadFile" will be error if the file is not ".md"', () => {
-  //     expect(pathReadFile('thumb.png')).toBe('no es un archivo .md...');
-  // });
 });
 
 /// cambiar sync ------
 describe('readmdLinks', () => {
-  test('readmdLinks', async() => {
-    return readmdLinks('readmeVacio.md').catch(error=>{
-      expect(error).toBe('el archivo esta vacio');
-    });
-  });
 
   test('readmdLinks', async() => {
     return readmdLinks('readmeExample.md').then(data=>{
@@ -120,20 +112,12 @@ describe('readmdLinks', () => {
 //*******
 
 describe('converMdToHtml', () => {
-  // it('function "converMdToHtml" will be error if the file has not links', () => {
-  //     expect( converMdToHtml('')).toBe('no hay links...');
-  // });
   it('function "converMdToHtml" array that contain all links with their document and text', () => {
       expect(converMdToHtml(['../readmeAllOkLinks.md','[Node.js](http://nodejs.og/)'])).toEqual([ [ '../readmeAllOkLinks.md', 'Node.js', 'http://nodejs.og/' ] ])
   });
 });
 
 describe('readDocuments', () => {
-  // test('readDocuments', async() => {
-  //   return readDocuments('').catch(error =>{
-  //     expect(error.code).toBe('ENOEdNT: el archivo no existe');
-  //   });
-  // });
   test('readDocuments', async() => {
     return readDocuments('src').catch(error=>{
       expect(error.code).toBe('EISDIR');
@@ -159,27 +143,18 @@ describe('statsArrayStatus', () => {
   it('function "statsArrayStatus" should return links with details', () => {
     expect( statsArrayStatus([{file:'a',text:'b',href:'c',status:'e',result:'OK'},{file:'a',text:'b',href:'d',status:'e',result:'FAIL'},{file:'b',text:'b',href:'d',status:'e',result:'FAIL'}])).toEqual({Files:'2' ,Total:'3',Ok:'1',Broquen:'2',Unique:'2',UniqueOk:'1',UniqueBroquen:'1'})
   });
-  // it('function "statsArrayStatus" should return erro3 if the array has not links', () => {
-  //   expect( statsArrayStatus([])).toBe('No hay links por analizar...')
-  // });
 });
 
 describe('statsArray', () => {
   it('function "statsArray" should return number of total and unique links WHEN there is a file ".md"', () => {
     expect( statsArray(['link1','link2','link2'])).toEqual({ Total: '3', Unique: '2' })
   });
-  // it('function "statsArray" should return error if the array has not links WHEN there is a file ".md"', () => {
-  //   expect( statsArray(18)).toBe('...no se puede analizar')
-  // });
 });
 
 describe('statsArrayGlobal', () => {
   it('function "statsArrayGlobal" should return number of total and unique links WHEN there are diferents files ".md"', () => {
     expect( statsArrayGlobal([['a','b','link1'],['c','d','link2'],['e','f','link2']])).toEqual({ Total: '3', Unique: '2' })
   });
-  // it('function "statsArrayGlobal" should return error if the array has not links WHEN there are diferents files ".md"', () => {
-  //   expect( statsArrayGlobal(18)).toBe('...no se puede analizar')
-  // });
 });
 //-----
 
