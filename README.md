@@ -22,10 +22,6 @@ varios archivos en este formato. Estos archivos `Markdown Links` normalmente
 contienen _links_ (vínculos/ligas) que aveces están rotos o ya no son válidos 
 lo que perjudica el valor de la información que se quiere compartir.
 
-
-
-![md-links](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
-
 ## 2. Instalación
 
 Módulo instalable via `npm install vanessah/md-links`.Este módulo incluye
