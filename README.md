@@ -24,7 +24,7 @@ lo que perjudica el valor de la información que se quiere compartir.
 
 ## 2. Instalación
 
-Módulo instalable via `npm install vanessah/md-links`.Este módulo incluye
+Módulo instalable via `npm install vaneah-md-links`.Este módulo incluye
 **un ejecutable** que podamos invocar en la línea de comando e incluye 
 **una interfaz** que puede importarse con `require` y usarlo programáticamente. 
 
