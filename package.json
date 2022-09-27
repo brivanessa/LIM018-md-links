@@ -13,11 +13,15 @@
   },
   "description": "## Índice",
   "main": "index.js",
+  "bin": {
+    "md-links": "src/cli.js"
+  },
   "directories": {
-    "test": "jest"
+    "test": "test"
   },
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "clear_jest": "jest --clearCache"
   },
   "repository": {
     "type": "git",
@@ -29,5 +33,6 @@
   "bugs": {
     "url": "https://github.com/brivanessa/LIM018-md-links/issues"
   },
-  "homepage": "https://github.com/brivanessa/LIM018-md-links#readme"
+  "homepage": "https://github.com/brivanessa/LIM018-md-links#readme",
+  "devDependencies": {}
 }
