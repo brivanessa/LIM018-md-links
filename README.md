@@ -35,7 +35,7 @@ Para corroborar las opciones válidas podemos ejecutar en la terminal:
 `md-links --help` o  `md-links --h`
 
 **--help:**  
-![help](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/help.png)
+![help](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/help.png)
 
 
 El ejecutable de la aplicación se ejecuta de la siguiente manera a través 
@@ -45,21 +45,21 @@ de la **terminal**:
 
 **route** 
 `md-links readmeExample.md`
-![route](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/md-links.png)
+![route](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/md-links.png)
 
 **--validate:**  
 `md-links readmeExample.md --validate`
-![--validate](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/validate.png)
+![--validate](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/validate.png)
 
 **--stats:**  
 `md-links readmeExample.md --stats`
-![--stats](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/stats.png)
+![--stats](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/stats.png)
 
 **--validate --stats:**  
 `md-links readmeExample.md --validate --stats`
-![--va--st](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/va&st.png)
+![--va--st](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/va%26st.png)
 
 
 ## 4. Diagrama de flujo
-![md-links](/Users/vanessa/Documents/LABORATORIA_018_2022/4_Proyecto/LIM018-md-links/folderFilesNoMd/validate.png)
+![md-links](https://github.com/brivanessa/LIM018-md-links/blob/main/folderFilesNoMd/Diagrama%20sin%20t%C3%ADtulo.drawio-2.png)
 
